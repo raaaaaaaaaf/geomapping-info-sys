@@ -1,50 +1,59 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, provider } from '../../../firebase/firebaseConfig';
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { auth, db } from '../../../firebase/firebaseConfig';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 // @mui
 import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../../components/iconify';
-import Swal from 'sweetalert2'
-
+import Swal from 'sweetalert2';
+import { doc, setDoc } from 'firebase/firestore';
 // ----------------------------------------------------------------------
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const signIn = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(res.user,{
+        displayName: name,
+      });
+      await setDoc(doc(db,"users", res.user.uid), {
+        uid: res.user.uid,
+        displayName: name,
+        email: email,
+        password: password,
+        role: "User"
+      })
       Swal.fire({
         icon: 'success',
-        title: 'Login Successfully',
+        title: 'Registered Successfully',
         showConfirmButton: false,
         timer: 1500
       })
       
     } catch(err) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Something went wrong!',
-        text: 'Try Again!',
-        
-      })
       console.error(err)
     }
-    navigate('/dashboard', { replace: true });
+    navigate('/login', { replace: true });
   };
-
-
 
   return (
     <>
       <Stack spacing={3}>
+        <TextField
+         name="displayName" 
+         label="Full Name"
+         onChange={(e) => setName(e.target.value)} 
+         />
+
         <TextField
          name="email" 
          label="Email address"
@@ -76,7 +85,7 @@ export default function LoginForm() {
       </Stack>
 
       <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={signIn} color="info">
-        Login
+        Sign Up
       </LoadingButton>
     </>
   );

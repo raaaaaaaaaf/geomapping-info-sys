@@ -8,14 +8,13 @@ import useResponsive from '../hooks/useResponsive';
 import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
-import { LoginForm } from '../sections/auth/login';
+import { RegisterForm } from '../sections/auth/register'
 import { signInWithPopup } from 'firebase/auth';
-import { auth, provider, db } from '../firebase/firebaseConfig';
+import { auth, provider, storage, db } from '../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
-import { doc, setDoc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
+import { doc, setDoc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
-
 // ----------------------------------------------------------------------
 
 
@@ -47,10 +46,9 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const mdUp = useResponsive('up', 'md');
   const navigate = useNavigate()
-
 
   const signInWithGoogle = async () => {
     try {
@@ -80,10 +78,13 @@ export default function LoginPage() {
     navigate('/Dashboard/app')
   }
 
+
+
+
   return (
     <>
       <Helmet>
-        <title> Login | Pregnancy Monitoring System </title>
+        <title> Register | Pregnancy Monitoring System </title>
       </Helmet>
 
       <StyledRoot>
@@ -98,7 +99,7 @@ export default function LoginPage() {
         {mdUp && (
           <StyledSection>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Brgy San Juan Health Clinic
+              Brgy San Juan Health Center
             </Typography>
             <img src="/assets/illustrations/patient_info.svg" alt="login" />
           </StyledSection>
@@ -107,13 +108,12 @@ export default function LoginPage() {
         <Container maxWidth="sm">
           <StyledContent>
             <Typography variant="h4" gutterBottom>
-              Sign in to Patient Information System
+              Sign up to Patient Information System
             </Typography>
 
             <Typography variant="body2" sx={{ mb: 5 }}>
-              Don’t have an account? {''}
-              <Link variant="subtitle2" to={'/register'}>Sign-up</Link>
-              
+              Already have an account? {''}
+              <Link variant="subtitle2" to={'/login'}>Sign In</Link>
             </Typography>
 
             <Stack direction="row" spacing={2}>
@@ -136,7 +136,7 @@ export default function LoginPage() {
               </Typography>
             </Divider>
 
-            <LoginForm />
+            <RegisterForm />
           </StyledContent>
         </Container>
       </StyledRoot>
