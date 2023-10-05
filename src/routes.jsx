@@ -12,12 +12,18 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import RegisterPage from './pages/RegisterPage'
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
+import MapPage from './pages/MapPage';
+import ResidenceRecordPage from './pages/ResidenceRecordPage';
 // ----------------------------------------------------------------------
 
 export default function Router() {
 
   const ProtectedRoute = ({children}) => {
     const {currentUser, loading, userData} = useContext(AuthContext)
+
+    if(loading) {
+      return <div>...</div>
+    }
 
     if(!currentUser) {
       return <Navigate to={'/login'} replace/>
@@ -49,6 +55,8 @@ export default function Router() {
         { path: 'user', element: <ProtectedRoute><UserPage /></ProtectedRoute> },
         { path: 'products', element: <ProtectedRoute><ProductsPage /></ProtectedRoute> },
         { path: 'blog', element: <ProtectedRoute><BlogPage /></ProtectedRoute> },
+        { path: 'map', element: <ProtectedRoute><MapPage /></ProtectedRoute> },
+        { path: 'record', element: <ProtectedRoute><ResidenceRecordPage /></ProtectedRoute> },
       ],
     },
 

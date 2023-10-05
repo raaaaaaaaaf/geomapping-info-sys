@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // @mui
 import {
   Card,
@@ -31,16 +31,21 @@ import { UserListHead, UserListToolbar } from "../sections/@dashboard/user";
 // mock
 import USERLIST from "../_mock/user";
 import AddModal from "../components/modal/AddModal";
+import { collection, getDocs, query } from "firebase/firestore";
+import { db } from "../firebase/firebaseConfig";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "name", label: "Name", alignRight: false },
-  { id: "company", label: "Company", alignRight: false },
-  { id: "role", label: "Role", alignRight: false },
-  { id: "isVerified", label: "Verified", alignRight: false },
-  { id: "status", label: "Status", alignRight: false },
-  { id: "" },
+  { id: "fname", label: "Name", alignRight: false },
+  { id: "age", label: "Age", alignRight: false },
+  { id: "gender", label: "Gender", alignRight: false },
+  { id: "dob", label: "Date of Birth", alignRight: false },
+  { id: "pob", label: "Place of Birth", alignRight: false },
+  { id: "cstatus", label: "Civil Status", alignRight: false },
+  { id: "contact", label: "Contact", alignRight: false },
+  { id: "religion", label: "Religion", alignRight: false },
+  { id: "action", label: "Action", alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -77,7 +82,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function UserPage() {
+export default function ResidenceRecordPage() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -93,6 +98,29 @@ export default function UserPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [residence, setResidence] = useState([])
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const data = [];
+            const dataRef = query(collection(db, "data_residences"))
+            const dataSnap = await getDocs(dataRef)
+            dataSnap.forEach((doc) => {
+                data.push({
+                  id: doc.id,
+                  ...doc.data(),
+                });
+              });
+              setResidence(data);
+        } catch(err) {
+            console.error(err)
+        }
+    }
+    fetchData()
+  }, [])
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -163,7 +191,7 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Residence Records </title>
       </Helmet>
 
       <Container>
@@ -174,14 +202,14 @@ export default function UserPage() {
           mb={5}
         >
           <Typography variant="h4" gutterBottom>
-            User
+            Residence Records
           </Typography>
           <Button
             onClick={() => setIsModalOpen(true)}
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            New User
+            New Residence
           </Button>
           <AddModal open={isModalOpen} onClose={() => setIsModalOpen(false)}/>
         </Stack>
@@ -206,19 +234,21 @@ export default function UserPage() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers
+                  {residence
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
+                    .map((residence, index) => {
                       const {
                         id,
-                        name,
-                        role,
-                        status,
-                        company,
-                        avatarUrl,
-                        isVerified,
-                      } = row;
-                      const selectedUser = selected.indexOf(name) !== -1;
+                        fname,
+                        age,
+                        contact,
+                        cstatus,
+                        dob,
+                        gender,
+                        pob,
+                        religion,
+                      } = residence;
+                      const selectedUser = selected.indexOf(fname) !== -1;
 
                       return (
                         <TableRow
@@ -231,7 +261,7 @@ export default function UserPage() {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={selectedUser}
-                              onChange={(event) => handleClick(event, name)}
+                              onChange={(event) => handleClick(event, fname)}
                             />
                           </TableCell>
 
@@ -241,30 +271,26 @@ export default function UserPage() {
                               alignItems="center"
                               spacing={2}
                             >
-                              <Avatar alt={name} src={avatarUrl} />
+                              <Avatar alt={fname} src={`/assets/images/avatars/avatar_${index + 1}.jpg`} />
                               <Typography variant="subtitle2" noWrap>
-                                {name}
+                                {fname}
                               </Typography>
                             </Stack>
                           </TableCell>
 
-                          <TableCell align="left">{company}</TableCell>
+                          <TableCell align="left">{age}</TableCell>
 
-                          <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">{gender}</TableCell>
 
-                          <TableCell align="left">
-                            {isVerified ? "Yes" : "No"}
-                          </TableCell>
+                          <TableCell align="left">{dob}</TableCell>
 
-                          <TableCell align="left">
-                            <Label
-                              color={
-                                (status === "banned" && "error") || "success"
-                              }
-                            >
-                              {sentenceCase(status)}
-                            </Label>
-                          </TableCell>
+                          <TableCell align="left">{pob}</TableCell>
+
+                          <TableCell align="left">{cstatus}</TableCell>
+
+                          <TableCell align="left">{contact}</TableCell>
+
+                          <TableCell align="left">{religion}</TableCell>
 
                           <TableCell align="right">
                             <IconButton

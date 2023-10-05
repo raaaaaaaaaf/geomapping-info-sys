@@ -13,7 +13,7 @@ const navConfig = [
   },
   {
     title: 'Mapping',
-    path: '/dashboard/user',
+    path: '/dashboard/map',
     icon: icon('ic_user'),
   },
   {
@@ -33,7 +33,7 @@ const navConfig = [
   },
   {
     title: 'Residents Record',
-    path: '/404',
+    path: '/dashboard/record',
     icon: icon('ic_disabled'),
   },
 ];
