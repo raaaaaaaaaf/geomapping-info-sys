@@ -11,6 +11,14 @@ export default function MapPage() {
   const [anchorEls, setAnchorEls] = useState([]); // Separate state for anchor elements
   const [selectedMarkerData, setSelectedMarkerData] = useState(null);
 
+  const [viewPort, setViewPort] = useState({
+    initialViewState: {
+      longitude: 125.55722,
+      latitude: 10.32703,
+      zoom: 15,
+    }
+  })
+
   const handleClick = (event, markerData) => {
     setSelectedMarkerData(markerData);
     // Set the anchor element for the clicked marker
@@ -50,16 +58,13 @@ export default function MapPage() {
   console.log(markers);
 
   return (
-    <div style={{ width: "80vw", height: "80vh" }}>
+    <div style={{ width: "100%", height: "100vh" }}>
       <Map
         mapboxAccessToken="pk.eyJ1IjoicnJpZGFkIiwiYSI6ImNsbjlxZGVlcDA3NTIyaWw1a2NyY280ZnYifQ.2nrX7vTLXitG1xpFHb6UMA"
-        initialViewState={{
-          longitude: 125.55722,
-          latitude: 10.32703,
-          zoom: 15,
-        }}
-        style={{ width: "100%", height: "100%" }}
         mapStyle="mapbox://styles/rridad/cln9qvssz00ct01p92c6o1auu"
+        {...viewPort}
+        width="90%"
+        height="100%"
       >
         {markers.map((marker) => (
           <div key={marker.id}>

@@ -14,6 +14,9 @@ import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
 import MapPage from './pages/MapPage';
 import ResidenceRecordPage from './pages/ResidenceRecordPage';
+import BarangayInfoPage from './pages/BarangayInfoPage';
+import ViewModal from './components/modal/ViewModal';
+import RecordViewPage from './pages/RecordViewPage';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -57,6 +60,8 @@ export default function Router() {
         { path: 'blog', element: <ProtectedRoute><BlogPage /></ProtectedRoute> },
         { path: 'map', element: <ProtectedRoute><MapPage /></ProtectedRoute> },
         { path: 'record', element: <ProtectedRoute><ResidenceRecordPage /></ProtectedRoute> },
+        { path: 'record/view/:id', element: <ProtectedRoute><RecordViewPage /></ProtectedRoute> },
+        { path: 'brgyinfo', element: <ProtectedRoute><BarangayInfoPage /></ProtectedRoute> },
       ],
     },
 

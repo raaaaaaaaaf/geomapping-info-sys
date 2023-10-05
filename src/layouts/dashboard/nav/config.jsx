@@ -17,19 +17,9 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
-    title: 'Barangay Officials',
-    path: '/dashboard/products',
-    icon: icon('ic_cart'),
-  },
-  {
     title: 'Barangay Information',
-    path: '/dashboard/blog',
+    path: '/dashboard/brgyinfo',
     icon: icon('ic_blog'),
-  },
-  {
-    title: 'Residents Registration',
-    path: '/login',
-    icon: icon('ic_lock'),
   },
   {
     title: 'Residents Record',

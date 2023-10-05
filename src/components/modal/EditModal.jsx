@@ -10,12 +10,13 @@ import {
   DialogActions,
   Divider,
 } from "@mui/material";
-import Popup from "../maps/MapPopup";
 import MapPopup from "../maps/MapPopup";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
+import EditMapPupup from "../maps/EditMapPupup";
 import Swal from "sweetalert2";
-const AddModal = ({ open, onClose }) => {
+
+const AddModal = ({ open, onClose, formID }) => {
   const [formData, setFormData] = useState({
     fname: "",
     age: "",
@@ -94,7 +95,7 @@ const AddModal = ({ open, onClose }) => {
     setHomeOccupants(updatedRecords);
   };
 
-  const [coords, setCoords] = useState({
+  const [editCoords, setEditCoords] = useState({
     longitude: 0,
     latitude: 0,
   });
@@ -118,9 +119,9 @@ const AddModal = ({ open, onClose }) => {
     }));
   };
 
-  const handleAdd = async () => {
+  const handleEdit = async (formID) => {
     try {
-      const dataRef = collection(db, "data_residences");
+      const dataRef = doc(db, "data_residences", formID);
       const data = {
         fname: formData.fname,
         age: formData.age,
@@ -133,12 +134,11 @@ const AddModal = ({ open, onClose }) => {
         edu_atainment: eduAttainment,
         employment_record: employmentRecords,
         homeOccupants: homeOccupants,
-        longitude: coords.longitude,
-        latitude: coords.latitude,
+        longitude: editCoords.longitude,
+        latitude: editCoords.latitude,
       };
-      await addDoc(dataRef, data);
-      Swal.fire("Succesfully Added", "Information has been added.", "success");
-      onClose();
+      await updateDoc(dataRef, data);
+      Swal.fire("Edited!", "Information has been edited.", "success");
     } catch (err) {
       Swal.fire({
         icon: "error",
@@ -151,7 +151,7 @@ const AddModal = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>BARANGAY REGISTRATION FORM</DialogTitle>
+      <DialogTitle> EDIT BARANGAY REGISTRATION FORM</DialogTitle>
       <DialogContent>
         {/* Residence Information */}
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -489,7 +489,7 @@ const AddModal = ({ open, onClose }) => {
             minHeight: "300px",
           }}
         >
-          <MapPopup coords={coords} setCoords={setCoords} />
+          <EditMapPupup editCoords={editCoords} setEditCoords={setEditCoords} />
         </div>
       </DialogContent>
 
@@ -497,7 +497,11 @@ const AddModal = ({ open, onClose }) => {
         <Button onClick={onClose} color="primary">
           Close
         </Button>
-        <Button onClick={handleAdd} color="primary" variant="contained">
+        <Button
+          onClick={() => handleEdit(formID)}
+          color="primary"
+          variant="contained"
+        >
           Submit
         </Button>
       </DialogActions>

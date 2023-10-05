@@ -31,22 +31,21 @@ import { UserListHead, UserListToolbar } from "../sections/@dashboard/user";
 // mock
 import USERLIST from "../_mock/user";
 import AddModal from "../components/modal/AddModal";
+import AddBrgyOfficial from "../components/modal/AddBrgyOfficial";
 import { collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
-import EditModal from "../components/modal/EditModal";
+import EditBrgyOfficial from "../components/modal/EditBrgyOfficial";
 import Swal from "sweetalert2";
 import ViewModal from "../components/modal/ViewModal";
-import { Link } from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "fname", label: "Name", alignRight: false },
-  { id: "age", label: "Age", alignRight: false },
-  { id: "gender", label: "Gender", alignRight: false },
-  { id: "dob", label: "Date of Birth", alignRight: false },
+  { id: "name", label: "Name", alignRight: false },
+  { id: "contact", label: "Contact No.", alignRight: false },
+  { id: "email", label: "E-mail", alignRight: false },
+  { id: "position", label: "Position", alignRight: false },
   { id: "cstatus", label: "Civil Status", alignRight: false },
-  { id: "contact", label: "Contact", alignRight: false },
   { id: "action", label: "Action", alignRight: false },
 ];
 
@@ -84,7 +83,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ResidenceRecordPage() {
+export default function BarangayInfoPage() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -101,19 +100,19 @@ export default function ResidenceRecordPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [residence, setResidence] = useState([]);
-
   const [editModalOpen, setEditModalOpen] = useState(false)
 
   const [viewModalOpen, setViewModalOpen] = useState(false)
 
-  const [formID, setFormID] = useState("");
+  const [brgyOfficials, setBrgyOfficials] = useState([]);
+
+  const [formID, setFormID] = useState("")
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = [];
-        const dataRef = query(collection(db, "data_residences"));
+        const dataRef = query(collection(db, "data_brgyofficials"));
         const dataSnap = await getDocs(dataRef);
         dataSnap.forEach((doc) => {
           data.push({
@@ -121,17 +120,16 @@ export default function ResidenceRecordPage() {
             ...doc.data(),
           });
         });
-        setResidence(data);
+        setBrgyOfficials(data);
       } catch (err) {
         console.error(err);
       }
     };
     fetchData();
   }, []);
-
   const handleDelete = async (id) => {
     try {
-      const dataRef = doc(db, "data_residences", id)
+      const dataRef = doc(db, "data_brgyofficials", id)
       await deleteDoc(dataRef)
       Swal.fire("Deleted!", "Information has been deleted.", "success");
       window.location.reload()
@@ -209,7 +207,7 @@ export default function ResidenceRecordPage() {
   return (
     <>
       <Helmet>
-        <title> Residence Records </title>
+        <title> Barangay Information</title>
       </Helmet>
 
       <Container>
@@ -220,16 +218,19 @@ export default function ResidenceRecordPage() {
           mb={5}
         >
           <Typography variant="h4" gutterBottom>
-            Residence Records
+            Barangay Officials
           </Typography>
           <Button
             onClick={() => setIsModalOpen(true)}
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            New Residence
+            New User
           </Button>
-          <AddModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
+          <AddBrgyOfficial
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
         </Stack>
 
         <Card>
@@ -252,21 +253,19 @@ export default function ResidenceRecordPage() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {residence
+                  {brgyOfficials
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((residence, index) => {
+                    .map((official, index) => {
                       const {
                         id,
                         fname,
-                        age,
-                        contact,
+                        position,
                         cstatus,
-                        dob,
-                        gender,
-                        pob,
-                        religion,
-                      } = residence;
-                      const selectedUser = selected.indexOf(fname) !== -1;
+                        email,
+                        contact,
+                        bod,
+                      } = official;
+                      const selectedUser = selected.indexOf(name) !== -1;
 
                       return (
                         <TableRow
@@ -301,46 +300,40 @@ export default function ResidenceRecordPage() {
                             </Stack>
                           </TableCell>
 
-                          <TableCell align="left">{age}</TableCell>
+                          <TableCell align="left">{contact}</TableCell>
 
-                          <TableCell align="left">{gender}</TableCell>
+                          <TableCell align="left">{email}</TableCell>
 
-                          <TableCell align="left">{dob}</TableCell>
+                          <TableCell align="left">{position}</TableCell>
 
                           <TableCell align="left">{cstatus}</TableCell>
 
-                          <TableCell align="left">{contact}</TableCell>
-
                           <TableCell align="left">
-                            <IconButton
+                          <IconButton
                               size="small"
                               color="inherit"
                               onClick={() => {setEditModalOpen(true), setFormID(id)}}
                             >
                               <Iconify icon={"material-symbols:edit-outline"} />
                             </IconButton>
-                            <EditModal open={editModalOpen} onClose={() => setEditModalOpen(false)} formID={formID}/>
+                            <EditBrgyOfficial open={editModalOpen} onClose={() => setEditModalOpen(false)} formID={formID}/>
                             <IconButton
                               size="small"
                               color="inherit"
                               onClick={() => handleDelete(id)}
                             >
-                              <Iconify
-                                icon={"material-symbols:delete-outline"}
-                              />
+                              <Iconify icon={"material-symbols:delete-outline"} />
                             </IconButton>
-                            <Link to={`view/${id}`} style={{ textDecoration: 'none', color: 'black'}}>
                             <IconButton
                               size="small"
                               color="inherit"
-                              
+                              onClick={() => {setViewModalOpen(true)}}
                             >
                               <Iconify icon={"carbon:view"} />
                             </IconButton>
-                            </Link>
-
-                            <ViewModal open={viewModalOpen} onClose={() => setViewModalOpen(false)}/>
+                            <ViewModal open={viewModalOpen} onClose={() => setViewModalOpen(false)} data={official}/>
                           </TableCell>
+
                         </TableRow>
                       );
                     })}
@@ -390,6 +383,35 @@ export default function ResidenceRecordPage() {
           />
         </Card>
       </Container>
+
+      <Popover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{
+          sx: {
+            p: 1,
+            width: 140,
+            "& .MuiMenuItem-root": {
+              px: 1,
+              typography: "body2",
+              borderRadius: 0.75,
+            },
+          },
+        }}
+      >
+        <MenuItem>
+          <Iconify icon={"eva:edit-fill"} sx={{ mr: 2 }} />
+          Edit
+        </MenuItem>
+
+        <MenuItem sx={{ color: "error.main" }}>
+          <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
+          Delete
+        </MenuItem>
+      </Popover>
     </>
   );
 }
