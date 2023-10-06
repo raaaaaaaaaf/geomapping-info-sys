@@ -27,7 +27,7 @@ export default function LoginForm() {
         showConfirmButton: false,
         timer: 1500
       })
-      
+      navigate('/dashboard', { replace: true });
     } catch(err) {
       Swal.fire({
         icon: 'error',
@@ -37,7 +37,7 @@ export default function LoginForm() {
       })
       console.error(err)
     }
-    navigate('/dashboard', { replace: true });
+    
   };
 
 

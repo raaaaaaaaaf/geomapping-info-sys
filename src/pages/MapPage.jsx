@@ -5,11 +5,20 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { Button, Popover, Typography } from "@mui/material";
+import Loader from "../components/loader/Loader";
 
 export default function MapPage() {
   const [markers, setMarkers] = useState([]);
   const [anchorEls, setAnchorEls] = useState([]); // Separate state for anchor elements
   const [selectedMarkerData, setSelectedMarkerData] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
 
   const [viewPort, setViewPort] = useState({
     initialViewState: {
@@ -59,7 +68,10 @@ export default function MapPage() {
 
   return (
     <div style={{ width: "100%", height: "100vh" }}>
-      <Map
+      {loading ? (
+        <Loader/>
+      ) : (
+        <Map
         mapboxAccessToken="pk.eyJ1IjoicnJpZGFkIiwiYSI6ImNsbjlxZGVlcDA3NTIyaWw1a2NyY280ZnYifQ.2nrX7vTLXitG1xpFHb6UMA"
         mapStyle="mapbox://styles/rridad/cln9qvssz00ct01p92c6o1auu"
         {...viewPort}
@@ -74,7 +86,7 @@ export default function MapPage() {
               anchor="bottom"
             >
               <Button onClick={(event) => handleClick(event, marker)}>
-                <Iconify icon={"jam:map-marker"} style={{ color: "red" }} />
+               <img src="/assets/icons/marker.png" alt="marker" style={{ width: '25px', height: '25px' }} />
               </Button>
               <Popover
                 open={selectedMarkerData && selectedMarkerData.id === marker.id}
@@ -101,6 +113,8 @@ export default function MapPage() {
           </div>
         ))}
       </Map>
+      )}
+
     </div>
   );
 }

@@ -98,17 +98,17 @@ export default function RegisterPage() {
 
         {mdUp && (
           <StyledSection>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Brgy San Juan Health Center
-            </Typography>
-            <img src="/assets/illustrations/patient_info.svg" alt="login" />
-          </StyledSection>
+          <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+          BRGY SAN ROQUE GEOMAPPING AND INFORMATION SYSTEM
+          </Typography>
+          <img src="/assets/illustrations/map.png" alt="login" />
+        </StyledSection>
         )}
 
         <Container maxWidth="sm">
           <StyledContent>
             <Typography variant="h4" gutterBottom>
-              Sign up to Patient Information System
+              Sign-up
             </Typography>
 
             <Typography variant="body2" sx={{ mb: 5 }}>

@@ -26,7 +26,7 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
   },
   '& fieldset': {
     borderWidth: `1px !important`,
-    borderColor: `${alpha(theme.palette.grey[500], 0.32)} !important`,
+    borderColor: '#121212',
   },
 }));
 

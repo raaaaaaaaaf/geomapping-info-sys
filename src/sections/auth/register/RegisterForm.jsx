@@ -38,11 +38,10 @@ export default function RegisterForm() {
         showConfirmButton: false,
         timer: 1500
       })
-      
+      navigate('/dashboard/app', { replace: true })
     } catch(err) {
       console.error(err)
     }
-    navigate('/login', { replace: true });
   };
 
   return (

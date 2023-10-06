@@ -83,7 +83,7 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Login | Pregnancy Monitoring System </title>
+        <title> Login </title>
       </Helmet>
 
       <StyledRoot>
@@ -98,16 +98,16 @@ export default function LoginPage() {
         {mdUp && (
           <StyledSection>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Brgy San Juan Health Clinic
+            BRGY SAN ROQUE GEOMAPPING AND INFORMATION SYSTEM
             </Typography>
-            <img src="/assets/illustrations/patient_info.svg" alt="login" />
+            <img src="/assets/illustrations/map.png" alt="login" />
           </StyledSection>
         )}
 
         <Container maxWidth="sm">
           <StyledContent>
             <Typography variant="h4" gutterBottom>
-              Sign in to Patient Information System
+              Sign-in
             </Typography>
 
             <Typography variant="body2" sx={{ mb: 5 }}>

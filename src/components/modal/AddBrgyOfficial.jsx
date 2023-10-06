@@ -10,11 +10,15 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const AddBrgyOfficial = ({ open, onClose }) => {
+
+  const nav = useNavigate() 
+
   const [formData, setFormData] = useState({
     fname: "",
     position: "",
@@ -42,10 +46,12 @@ const AddBrgyOfficial = ({ open, onClose }) => {
         email: formData.email,
         bod: formData.bod,
         cstatus: formData.cstatus,
+        timeStamp: serverTimestamp(),
       };
       await addDoc(dataRef, data);
       Swal.fire("Succesfully Added", "Information has been added.", "success");
       onClose();
+      nav('/dashboard/brgyinfo')
     } catch (err) {
       Swal.fire({
         icon: "error",

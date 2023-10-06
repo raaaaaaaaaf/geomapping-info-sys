@@ -21,7 +21,7 @@ import Iconify from "../iconify";
 import { useParams } from "react-router-dom";
 
 const ViewModal = ({ open, onClose, data }) => {
-  const { id, fname, position, cstatus, email, contact, bod } = data;
+  const { fname, position, cstatus, email, contact, bod } = data;
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Barangay Official Information</DialogTitle>

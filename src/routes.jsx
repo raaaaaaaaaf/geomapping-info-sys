@@ -10,29 +10,48 @@ import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import RegisterPage from './pages/RegisterPage'
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from './context/AuthContext';
 import MapPage from './pages/MapPage';
 import ResidenceRecordPage from './pages/ResidenceRecordPage';
 import BarangayInfoPage from './pages/BarangayInfoPage';
 import ViewModal from './components/modal/ViewModal';
 import RecordViewPage from './pages/RecordViewPage';
+import Loader from './components/loader/Loader';
 // ----------------------------------------------------------------------
 
 export default function Router() {
 
-  const ProtectedRoute = ({children}) => {
-    const {currentUser, loading, userData} = useContext(AuthContext)
-
-    if(loading) {
-      return <div>...</div>
+  const ProtectedRoute = ({ children }) => {
+    const { currentUser, loading, userData } = useContext(AuthContext);
+    const [timedOut, setTimedOut] = useState(false);
+  
+    useEffect(() => {
+      // Set a timeout to consider the loading taking too long
+      const timeoutId = setTimeout(() => {
+        setTimedOut(true);
+      }, 2000); // 5 seconds timeout (adjust as needed)
+  
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }, []);
+  
+    if (loading) {
+      if (timedOut) {
+        // Redirect to login page if loading takes too long
+        return <Navigate to="/login" replace />;
+      } else {
+        return <Loader/>
+      }
     }
-
-    if(!currentUser) {
-      return <Navigate to={'/login'} replace/>
+  
+    if (!currentUser) {
+      return <Navigate to="/login" replace />;
     }
-    return children
-  }
+  
+    return children;
+  };
 
 
   const routes = useRoutes([

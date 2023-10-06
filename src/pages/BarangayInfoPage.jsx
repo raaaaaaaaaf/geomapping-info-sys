@@ -37,6 +37,8 @@ import { db } from "../firebase/firebaseConfig";
 import EditBrgyOfficial from "../components/modal/EditBrgyOfficial";
 import Swal from "sweetalert2";
 import ViewModal from "../components/modal/ViewModal";
+import Loader from "../components/loader/Loader";
+import { useNavigate } from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -106,7 +108,19 @@ export default function BarangayInfoPage() {
 
   const [brgyOfficials, setBrgyOfficials] = useState([]);
 
+  const [viewModalData, setViewModalData] =  useState({})
+
   const [formID, setFormID] = useState("")
+
+  const [loading, setLoading] = useState(true)
+
+  const nav = useNavigate();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false)
+    }, 2000)
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -132,11 +146,13 @@ export default function BarangayInfoPage() {
       const dataRef = doc(db, "data_brgyofficials", id)
       await deleteDoc(dataRef)
       Swal.fire("Deleted!", "Information has been deleted.", "success");
-      window.location.reload()
+      nav('/dashboard/brgyinfo')
     } catch(err) {
       console.error(err)
     }
   }
+
+
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -225,7 +241,7 @@ export default function BarangayInfoPage() {
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            New User
+            Barangay Officials
           </Button>
           <AddBrgyOfficial
             open={isModalOpen}
@@ -233,7 +249,11 @@ export default function BarangayInfoPage() {
           />
         </Stack>
 
-        <Card>
+        {loading ? (
+          <Loader/>
+        ) : (
+
+          <Card>
           <UserListToolbar
             numSelected={selected.length}
             filterName={filterName}
@@ -327,11 +347,11 @@ export default function BarangayInfoPage() {
                             <IconButton
                               size="small"
                               color="inherit"
-                              onClick={() => {setViewModalOpen(true)}}
+                              onClick={() => {setViewModalOpen(true), setViewModalData(official)}}
                             >
                               <Iconify icon={"carbon:view"} />
                             </IconButton>
-                            <ViewModal open={viewModalOpen} onClose={() => setViewModalOpen(false)} data={official}/>
+                            <ViewModal open={viewModalOpen} onClose={() => setViewModalOpen(false)} data={viewModalData}/>
                           </TableCell>
 
                         </TableRow>
@@ -382,6 +402,8 @@ export default function BarangayInfoPage() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        )}
+
       </Container>
 
       <Popover

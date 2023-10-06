@@ -15,8 +15,12 @@ import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import EditMapPupup from "../maps/EditMapPupup";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const AddModal = ({ open, onClose, formID }) => {
+
+  const nav = useNavigate()
+
   const [formData, setFormData] = useState({
     fname: "",
     age: "",
@@ -139,6 +143,8 @@ const AddModal = ({ open, onClose, formID }) => {
       };
       await updateDoc(dataRef, data);
       Swal.fire("Edited!", "Information has been edited.", "success");
+      onClose()
+      nav('/dashboard/record')
     } catch (err) {
       Swal.fire({
         icon: "error",

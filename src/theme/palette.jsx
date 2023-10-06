@@ -81,14 +81,14 @@ const palette = {
   grey: GREY,
   divider: alpha(GREY[500], 0.24),
   text: {
-    primary: GREY[800],
-    secondary: GREY[600],
-    disabled: GREY[500],
+    primary: '#fff',
+    secondary:'#fff',
+    disabled: '#fff',
   },
   background: {
-    paper: '#fff',
-    default: GREY[100],
-    neutral: GREY[200],
+    paper: '#121212',
+    default: '#121212', // A darker shade of color with opacity
+    neutral: '#121212',
   },
   action: {
     active: GREY[600],

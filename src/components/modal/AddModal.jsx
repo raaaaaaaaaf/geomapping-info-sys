@@ -12,10 +12,15 @@ import {
 } from "@mui/material";
 import Popup from "../maps/MapPopup";
 import MapPopup from "../maps/MapPopup";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 const AddModal = ({ open, onClose }) => {
+
+  const nav = useNavigate();
+
+
   const [formData, setFormData] = useState({
     fname: "",
     age: "",
@@ -135,10 +140,12 @@ const AddModal = ({ open, onClose }) => {
         homeOccupants: homeOccupants,
         longitude: coords.longitude,
         latitude: coords.latitude,
+        timeStamp: serverTimestamp(),
       };
       await addDoc(dataRef, data);
       Swal.fire("Succesfully Added", "Information has been added.", "success");
       onClose();
+      nav('/dashboard/record')
     } catch (err) {
       Swal.fire({
         icon: "error",

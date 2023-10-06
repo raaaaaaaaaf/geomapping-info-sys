@@ -97,14 +97,6 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Stack sx={{ p: 1 }}>
-          <Link to={'/dashboard/app'} style={{ textDecoration: 'none', color: 'black'}}>
-            <MenuItem >
-             Home
-            </MenuItem>
-          </Link>
-
-        </Stack>
 
 
         <MenuItem onClick={logout} sx={{ m: 1 }}>
