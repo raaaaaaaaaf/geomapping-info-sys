@@ -66,6 +66,7 @@ export default function RegisterPage() {
         showConfirmButton: false,
         timer: 1500
       })
+      navigate('/Dashboard/app')
     } catch (err) {
       Swal.fire({
         icon: 'error',
@@ -75,7 +76,7 @@ export default function RegisterPage() {
       })
       console.error(err);
     }
-    navigate('/Dashboard/app')
+    
   }
 
 

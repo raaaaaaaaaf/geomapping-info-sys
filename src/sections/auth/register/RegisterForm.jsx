@@ -39,8 +39,22 @@ export default function RegisterForm() {
         timer: 1500
       })
       navigate('/dashboard/app', { replace: true })
-    } catch(err) {
-      console.error(err)
+    } catch (error) {
+      let customErrorMessage = "An error occurred.";
+
+      // Check the error code and customize the message accordingly
+      if (error.code === "auth/invalid-email") {
+        customErrorMessage = "Invalid email address. Please check your email.";
+      } else if (error.code === "auth/user-not-found") {
+        customErrorMessage = "User not found. Please sign up or try again.";
+      } // Add more conditions for other Firebase error codes if needed
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: customErrorMessage,
+      });
+      console.error(error);
     }
   };
 
