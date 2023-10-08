@@ -39,6 +39,7 @@ import Swal from "sweetalert2";
 import ViewModal from "../components/modal/ViewModal";
 import Loader from "../components/loader/Loader";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +80,7 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_user) => _user.fname.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el) => el[0]);
@@ -109,6 +110,8 @@ export default function BarangayInfoPage() {
   const [brgyOfficials, setBrgyOfficials] = useState([]);
 
   const [viewModalData, setViewModalData] =  useState({})
+
+  const [editData, setEditData] = useState({})
 
   const [formID, setFormID] = useState("")
 
@@ -145,13 +148,22 @@ export default function BarangayInfoPage() {
     try {
       const dataRef = doc(db, "data_brgyofficials", id)
       await deleteDoc(dataRef)
-      Swal.fire("Deleted!", "Information has been deleted.", "success");
+      toast.success("Deleted successfully", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+      });
       nav('/dashboard/brgyinfo')
     } catch(err) {
       console.error(err)
     }
   }
 
+  const handleEditModal = (id, data) => {
+    setFormID(id);
+    setEditData(data);
+    setEditModalOpen(true);
+  };
 
 
   const handleOpenMenu = (event) => {
@@ -170,7 +182,7 @@ export default function BarangayInfoPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = brgyOfficials.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -210,10 +222,10 @@ export default function BarangayInfoPage() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - brgyOfficials.length) : 0;
 
   const filteredUsers = applySortFilter(
-    USERLIST,
+    brgyOfficials,
     getComparator(order, orderBy),
     filterName
   );
@@ -267,13 +279,13 @@ export default function BarangayInfoPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={brgyOfficials.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {brgyOfficials
+                  {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((official, index) => {
                       const {
@@ -332,11 +344,11 @@ export default function BarangayInfoPage() {
                           <IconButton
                               size="small"
                               color="inherit"
-                              onClick={() => {setEditModalOpen(true), setFormID(id)}}
+                              onClick={() => handleEditModal(id, official)}
                             >
                               <Iconify icon={"material-symbols:edit-outline"} />
                             </IconButton>
-                            <EditBrgyOfficial open={editModalOpen} onClose={() => setEditModalOpen(false)} formID={formID}/>
+                            
                             <IconButton
                               size="small"
                               color="inherit"
@@ -390,12 +402,13 @@ export default function BarangayInfoPage() {
                 )}
               </Table>
             </TableContainer>
+            <EditBrgyOfficial open={editModalOpen} onClose={() => setEditModalOpen(false)} formID={formID} data={editData}/>
           </Scrollbar>
 
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={brgyOfficials.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

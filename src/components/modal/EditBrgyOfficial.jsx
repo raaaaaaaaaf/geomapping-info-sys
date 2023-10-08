@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import {
   Box,
@@ -14,8 +14,9 @@ import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const EditBrgyOfficial = ({ open, onClose, formID }) => {
+const EditBrgyOfficial = ({ open, onClose, formID, data }) => {
 
   const nav = useNavigate() 
 
@@ -27,6 +28,17 @@ const EditBrgyOfficial = ({ open, onClose, formID }) => {
     bod: "",
     cstatus: "",
   });
+
+  useEffect(() => {
+    setFormData({
+      fname: data.fname || "",
+      position: data.position || "",
+      contact: data.contact || "",
+      email: data.email || "",
+      bod: data.bod || "",
+      cstatus: data.cstatus || "",
+    })
+  }, [data])
   // Define the handleInputChange function to update formData
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +50,21 @@ const EditBrgyOfficial = ({ open, onClose, formID }) => {
 
   const handleEdit = async (formID) => {
     try {
+      if (
+        !formData.fname ||
+        !formData.position ||
+        !formData.contact ||
+        !formData.email ||
+        !formData.bod ||
+        !formData.cstatus
+      ) {
+        toast.error("Please fill out all fields.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+        });
+        return; // Exit the function if validation fails
+      }
       const dataRef = doc(db, "data_brgyofficials", formID);
       const data = {
         fname: formData.fname,
@@ -48,14 +75,18 @@ const EditBrgyOfficial = ({ open, onClose, formID }) => {
         cstatus: formData.cstatus,
       };
       await updateDoc(dataRef, data);
-      Swal.fire("Edited!", "Information has been edited.", "success");
+      toast.success("Edit successful", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+      });
       onClose();
       nav('/dashboard/brgyinfo')
     } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Something went wrong!",
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
       });
       console.error(err);
     }

@@ -16,6 +16,7 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const AddModal = ({ open, onClose }) => {
 
   const nav = useNavigate();
@@ -125,6 +126,28 @@ const AddModal = ({ open, onClose }) => {
 
   const handleAdd = async () => {
     try {
+      if (
+        !formData.fname ||
+        !formData.age ||
+        !formData.gender ||
+        !formData.dob ||
+        !formData.pob ||
+        !formData.contact ||
+        !formData.cstatus ||
+        !formData.religion ||
+        !eduAttainment ||
+        !employmentRecords ||
+        !homeOccupants ||
+        !coords.longitude ||
+        !coords.latitude
+      ) {
+        toast.error("Please fill out all fields.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+        });
+        return; // Exit the function if validation fails
+      }
       const dataRef = collection(db, "data_residences");
       const data = {
         fname: formData.fname,
@@ -143,14 +166,18 @@ const AddModal = ({ open, onClose }) => {
         timeStamp: serverTimestamp(),
       };
       await addDoc(dataRef, data);
-      Swal.fire("Succesfully Added", "Information has been added.", "success");
+      toast.success("Successfully added", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+      });
       onClose();
       nav('/dashboard/record')
     } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Something went wrong!",
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
       });
       console.error(err);
     }

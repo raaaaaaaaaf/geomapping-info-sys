@@ -38,6 +38,7 @@ import Swal from "sweetalert2";
 import ViewModal from "../components/modal/ViewModal";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../components/loader/Loader";
+import { toast } from "react-toastify";
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +80,7 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_user) => _user.fname.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el) => el[0]);
@@ -106,9 +107,9 @@ export default function ResidenceRecordPage() {
 
   const [editModalOpen, setEditModalOpen] = useState(false);
 
-  const [viewModalOpen, setViewModalOpen] = useState(false);
-
   const [formID, setFormID] = useState("");
+
+  const [editData, setEditData] = useState({});
 
   const [loading, setLoading] = useState(true);
 
@@ -144,11 +145,21 @@ export default function ResidenceRecordPage() {
     try {
       const dataRef = doc(db, "data_residences", id);
       await deleteDoc(dataRef);
-      Swal.fire("Deleted!", "Information has been deleted.", "success");
-      nav('/dashboard/record')
+      toast.success("Deleted successfully", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+      });
+      nav("/dashboard/record");
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handleEditModal = (id, data) => {
+    setFormID(id);
+    setEditData(data);
+    setEditModalOpen(true);
   };
 
   const handleOpenMenu = (event) => {
@@ -167,7 +178,7 @@ export default function ResidenceRecordPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = residence.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -207,10 +218,10 @@ export default function ResidenceRecordPage() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - residence.length) : 0;
 
   const filteredUsers = applySortFilter(
-    USERLIST,
+    residence,
     getComparator(order, orderBy),
     filterName
   );
@@ -259,13 +270,13 @@ export default function ResidenceRecordPage() {
                     order={order}
                     orderBy={orderBy}
                     headLabel={TABLE_HEAD}
-                    rowCount={USERLIST.length}
+                    rowCount={residence.length}
                     numSelected={selected.length}
                     onRequestSort={handleRequestSort}
                     onSelectAllClick={handleSelectAllClick}
                   />
                   <TableBody>
-                    {residence
+                    {filteredUsers
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
@@ -335,19 +346,13 @@ export default function ResidenceRecordPage() {
                               <IconButton
                                 size="small"
                                 color="inherit"
-                                onClick={() => {
-                                  setEditModalOpen(true), setFormID(id);
-                                }}
+                                onClick={() => handleEditModal(id, residence)}
                               >
                                 <Iconify
                                   icon={"material-symbols:edit-outline"}
                                 />
                               </IconButton>
-                              <EditModal
-                                open={editModalOpen}
-                                onClose={() => setEditModalOpen(false)}
-                                formID={formID}
-                              />
+
                               <IconButton
                                 size="small"
                                 color="inherit"
@@ -361,7 +366,7 @@ export default function ResidenceRecordPage() {
                                 to={`view/${id}`}
                                 style={{
                                   textDecoration: "none",
-                                  color: "black",
+                                  color: "inherit",
                                 }}
                               >
                                 <IconButton size="small" color="inherit">
@@ -405,12 +410,18 @@ export default function ResidenceRecordPage() {
                   )}
                 </Table>
               </TableContainer>
+              <EditModal
+                open={editModalOpen}
+                onClose={() => setEditModalOpen(false)}
+                id={formID}
+                data={editData}
+              />
             </Scrollbar>
 
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={USERLIST.length}
+              count={residence.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

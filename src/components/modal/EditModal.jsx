@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -16,10 +16,10 @@ import { db } from "../../firebase/firebaseConfig";
 import EditMapPupup from "../maps/EditMapPupup";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const AddModal = ({ open, onClose, formID }) => {
-
-  const nav = useNavigate()
+const AddModal = ({ open, onClose, id, data }) => {
+  const nav = useNavigate();
 
   const [formData, setFormData] = useState({
     fname: "",
@@ -65,6 +65,74 @@ const AddModal = ({ open, onClose, formID }) => {
       occupation: "",
     },
   ]);
+  const [editCoords, setEditCoords] = useState({
+    longitude: 0,
+    latitude: 0,
+  });
+
+  useEffect(() => {
+    setFormData({
+      fname: data.fname || "",
+      age: data.age || "",
+      gender: data.gender || "",
+      dob: data.dob || "",
+      pob: data.pob || "",
+      contact: data.contact || "",
+      cstatus: data.cstatus || "",
+      religion: data.religion || "",
+    });
+    setEduAttainment({
+      Elementary: {
+        School: data.edu_atainment?.Elementary?.School || "",
+        Address: data.edu_atainment?.Elementary?.Address || "",
+      },
+      Highschool: {
+        School: data.edu_atainment?.Highschool?.School || "",
+        Address: data.edu_atainment?.Highschool?.Address || "",
+      },
+      College: {
+        School: data.edu_atainment?.College?.School || "",
+        Address: data.edu_atainment?.College?.Address || "",
+      },
+    });
+    // Populate employmentRecords based on data.employment_record array
+    if (Array.isArray(data.employment_record)) {
+      setEmploymentRecords(
+        data.employment_record.map((record) => ({
+          duration: record.duration || "",
+          employer: record.employer || "",
+          address: record.address || "",
+          salary: record.salary || "",
+        }))
+      );
+    } else {
+      // If data.employment_record is not an array, initialize it as an empty array
+      setEmploymentRecords([]);
+    }
+
+    
+    if (Array.isArray(data.homeOccupants)) {
+      setHomeOccupants(
+        data.homeOccupants.map((record) => ({
+          name: record.name || "",
+          position: record.position || "",
+          age: record.age || "",
+          dob: record.dob || "",
+          cstatus: record.cstatus || "",
+          occupation: record.occupation || "",
+        }))
+      );
+    } else {
+      // If data.homeOccupants is not an array, initialize it as an empty array
+      setHomeOccupants([]);
+    }
+
+    setEditCoords({
+      longitude: data.longitude || 0,
+      latitude: data.latitude || 0,
+    })
+    
+  }, [data]);
 
   const addEmploymentRecord = () => {
     setEmploymentRecords([
@@ -99,10 +167,7 @@ const AddModal = ({ open, onClose, formID }) => {
     setHomeOccupants(updatedRecords);
   };
 
-  const [editCoords, setEditCoords] = useState({
-    longitude: 0,
-    latitude: 0,
-  });
+
 
   // Define the handleInputChange function to update formData
   const handleInputChange = (e) => {
@@ -123,9 +188,32 @@ const AddModal = ({ open, onClose, formID }) => {
     }));
   };
 
-  const handleEdit = async (formID) => {
+  const handleEdit = async (id) => {
     try {
-      const dataRef = doc(db, "data_residences", formID);
+      if (
+        !formData.fname ||
+        !formData.age ||
+        !formData.gender ||
+        !formData.dob ||
+        !formData.pob ||
+        !formData.contact ||
+        !formData.cstatus ||
+        !formData.religion ||
+        !eduAttainment ||
+        !employmentRecords ||
+        !homeOccupants ||
+        !editCoords.longitude ||
+        !editCoords.latitude
+      ) {
+        toast.error("Please fill out all fields.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+        });
+        return; // Exit the function if validation fails
+      }
+
+      const dataRef = doc(db, "data_residences", id);
       const data = {
         fname: formData.fname,
         age: formData.age,
@@ -142,14 +230,18 @@ const AddModal = ({ open, onClose, formID }) => {
         latitude: editCoords.latitude,
       };
       await updateDoc(dataRef, data);
-      Swal.fire("Edited!", "Information has been edited.", "success");
-      onClose()
-      nav('/dashboard/record')
+      toast.success("Edit successful", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+      });
+      onClose();
+      nav("/dashboard/record");
     } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Something went wrong!",
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
       });
       console.error(err);
     }
@@ -504,7 +596,7 @@ const AddModal = ({ open, onClose, formID }) => {
           Close
         </Button>
         <Button
-          onClick={() => handleEdit(formID)}
+          onClick={() => handleEdit(id)}
           color="primary"
           variant="contained"
         >
