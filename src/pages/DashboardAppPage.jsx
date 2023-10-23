@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { collection, doc, getDocs, query } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import _ from "lodash";
+import { Link } from "react-router-dom";
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
@@ -59,6 +60,8 @@ export default function DashboardAppPage() {
     fetchData();
   }, []);
 
+
+
   const sortedDocData = _.sortBy(
     resData,
     (data) => data.timeStamp.seconds
@@ -67,7 +70,7 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title> Dashboard | Geomapping and Information System </title>
       </Helmet>
 
       <Container maxWidth="xl">
@@ -77,22 +80,28 @@ export default function DashboardAppPage() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={6}>
-            <AppWidgetSummary
-              title="Barangay Official's"
-              total={brgyOfficial}
-              color="info"
-              icon={"akar-icons:person"}
-            />
+            <Link to={'/dashboard/brgyinfo'} style={{ textDecoration: 'none' }}>
+              <AppWidgetSummary
+                title="Barangay Official's"
+                total={brgyOfficial}
+                color="info"
+                icon={"akar-icons:person"}
+              />
+            </Link>
+
           </Grid>
 
           <Grid item xs={12} sm={6} md={6}>
-            <AppWidgetSummary
-              title="Residence Record's"
-              total={residence}
-              color="info"
-              icon={"tabler:file-type-doc"}
-            />
-          </Grid>
+            <Link to={'/dashboard/record'} style={{ textDecoration: 'none' }}>
+              <AppWidgetSummary
+                title="Residence Record's"
+                total={residence}
+                color="info"
+                icon={"tabler:file-type-doc"}
+              />
+            </Link>
+
+          </Grid> 
 
           <Grid item xs={12} md={6} lg={12}>
             <AppOrderTimeline
