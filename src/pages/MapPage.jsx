@@ -7,12 +7,66 @@ import { db } from "../firebase/firebaseConfig";
 import { Button, Popover, Typography } from "@mui/material";
 import Loader from "../components/loader/Loader";
 
+const MarkerList = [
+  {
+    latitude: 10.328231,
+    longitude: 125.555697,
+    color: "orange",
+    content: [
+      "Community Engagement: Barangay Gymnasium",
+      "Barangay Seminars/Meetings, barangay program/activities",
+      "and bayanihan sa pag unlad ng barangay",
+    ],
+  },
+  {
+    latitude: 10.328028,
+    longitude: 125.555415,
+    color: "yellow",
+    content: [
+      "Healthcare Management: Barangay Health Center",
+      "The Center offers the following services:",
+      " • Immunization",
+      " • Prenatal Checkup",
+      " • First-aid Medication",
+      " • Monthly Checkup with a nurse",
+    ],
+  },
+  {
+    latitude: 10.328713,
+    longitude: 125.555458,
+    color: "green",
+    content: [
+      "Disaster Preparedness: Oges, San Roque",
+      "(This area is a prone to landslide, please",
+      "avoid getting here in times of calamities)",
+    ],
+  },
+  {
+    latitude: 10.328699,
+    longitude: 125.555741,
+    color: "blue",
+    content: [
+      "Resource Allocation: Barangay Hall",
+      "(Need an improvement facilities ",
+      "and department offices)",
+    ],
+  },
+];
+
 export default function MapPage() {
   const [markers, setMarkers] = useState([]);
   const [anchorEls, setAnchorEls] = useState([]); // Separate state for anchor elements
   const [selectedMarkerData, setSelectedMarkerData] = useState(null);
-
+  const [activeMarker, setActiveMarker] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const handleMarkerClick = (index) => {
+    if (index === activeMarker) {
+      setActiveMarker(null);
+    } else {
+      setActiveMarker(index);
+    }
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -25,8 +79,8 @@ export default function MapPage() {
       longitude: 125.55722,
       latitude: 10.32703,
       zoom: 15,
-    }
-  })
+    },
+  });
 
   const handleClick = (event, markerData) => {
     setSelectedMarkerData(markerData);
@@ -42,8 +96,6 @@ export default function MapPage() {
   const handleClose = () => {
     setSelectedMarkerData(null);
   };
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,57 +116,112 @@ export default function MapPage() {
     };
     fetchData();
   }, []);
-  console.log(markers);
+  
 
   return (
     <div style={{ width: "100%", height: "100vh" }}>
       {loading ? (
-        <Loader/>
+        <Loader />
       ) : (
         <Map
-        mapboxAccessToken="pk.eyJ1IjoicnJpZGFkIiwiYSI6ImNsbjlxZGVlcDA3NTIyaWw1a2NyY280ZnYifQ.2nrX7vTLXitG1xpFHb6UMA"
-        mapStyle="mapbox://styles/rridad/cln9qvssz00ct01p92c6o1auu"
-        {...viewPort}
-        width="90%"
-        height="100%"
-      >
-        {markers.map((marker) => (
-          <div key={marker.id}>
+          mapboxAccessToken="pk.eyJ1IjoicnJpZGFkIiwiYSI6ImNsbjlxZGVlcDA3NTIyaWw1a2NyY280ZnYifQ.2nrX7vTLXitG1xpFHb6UMA"
+          mapStyle="mapbox://styles/rridad/cln9qvssz00ct01p92c6o1auu"
+          {...viewPort}
+          width="90%"
+          height="100%"
+        >
+          {MarkerList.map((marker, index) => (
             <Marker
-              longitude={marker.longitude}
+              key={index}
               latitude={marker.latitude}
+              longitude={marker.longitude}
               anchor="bottom"
             >
-              <Button onClick={(event) => handleClick(event, marker)}>
-               <img src="/assets/icons/marker.png" alt="marker" style={{ width: '25px', height: '25px' }} />
+              <Button
+                aria-describedby={index}
+                onClick={() => handleMarkerClick(index)}
+              >
+                <Iconify icon="material-symbols:circle" color={marker.color} />
               </Button>
-              <Popover
-                open={selectedMarkerData && selectedMarkerData.id === marker.id}
-                anchorEl={anchorEls[markers.indexOf(marker)]}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-              > <Typography sx={{ p: 1 }}>{marker.latitude}, {marker.longitude}</Typography>
-                <Typography sx={{ p: 1 }}>Name: {marker.fname}</Typography>
-                <Typography sx={{ p: 1 }}>Birth Date: {marker.dob}</Typography>
-                <Typography sx={{ p: 1 }}>
-                  Place of Birth: {marker.pob}
-                </Typography>
-                <Typography sx={{ p: 1 }}>
-                  Civil Status: {marker.cstatus}
-                </Typography>
-                <Typography sx={{ p: 1 }}>
-                  Religion: {marker.religion}
-                </Typography>
-              </Popover>
             </Marker>
-          </div>
-        ))}
-      </Map>
-      )}
+          ))}
+          {activeMarker !== null && (
+            <Popover
+              id={activeMarker}
+              open={activeMarker !== null}
+              anchorEl={{
+                latitude: MarkerList[activeMarker].latitude,
+                longitude: MarkerList[activeMarker].longitude,
+              }}
+              onClose={() => setActiveMarker(null)}
+              anchorOrigin={{
+                vertical: "bottom", // Adjust the vertical position
+                horizontal: "center", // Center horizontally
+              }}
+              transformOrigin={{
+                vertical: "bottom", // Adjust the vertical position
+                horizontal: "center", // Center horizontally
+              }}
+            >
+              {MarkerList[activeMarker].content.map((text, index) => (
+                <Typography
+                  key={index}
+                  sx={{ p: 1, textAlign: "center"}}
+                >
+                  {text}
+                </Typography>
+              ))}
+            </Popover>
+          )}
 
+          {markers.map((marker) => (
+            <div key={marker.id}>
+              <Marker
+                longitude={marker.longitude}
+                latitude={marker.latitude}
+                anchor="bottom"
+              >
+                <Button onClick={(event) => handleClick(event, marker)}>
+                  <img
+                    src="/assets/icons/marker.png"
+                    alt="marker"
+                    style={{ width: "25px", height: "25px" }}
+                  />
+                </Button>
+                <Popover
+                  open={
+                    selectedMarkerData && selectedMarkerData.id === marker.id
+                  }
+                  anchorEl={anchorEls[markers.indexOf(marker)]}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  {" "}
+                  <Typography sx={{ p: 1 }}>
+                    {marker.latitude}, {marker.longitude}
+                  </Typography>
+                  <Typography sx={{ p: 1 }}>Name: {marker.fname}</Typography>
+                  <Typography sx={{ p: 1 }}>
+                    Birth Date: {marker.dob}
+                  </Typography>
+                  <Typography sx={{ p: 1 }}>
+                    Place of Birth: {marker.pob}
+                  </Typography>
+                  <Typography sx={{ p: 1 }}>
+                    Civil Status: {marker.cstatus}
+                  </Typography>
+                  <Typography sx={{ p: 1 }}>
+                    Religion: {marker.religion}
+                  </Typography>
+                </Popover>
+              </Marker>
+            </div>
+          ))}
+        </Map>
+      )}
     </div>
   );
 }
