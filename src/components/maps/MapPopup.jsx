@@ -50,7 +50,7 @@ const MapPopup = ({coords, setCoords}) => {
             offsetLeft={-20}
             offsetTop={-10}
           >
-            <img src="/assets/pin.png" alt="pin" style={{ width: '32px', height: '32' }} />
+            <img src="/assets/pin.png" alt="pin" style={{ width: '20px', height: '20' }} />
           </Marker>
         )}
       </Map>

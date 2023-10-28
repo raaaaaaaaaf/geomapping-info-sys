@@ -58,7 +58,7 @@ const EditMapPupup = ({editCoords, setEditCoords}) => {
             offsetLeft={-20}
             offsetTop={-10}
           >
-            <Iconify icon={"jam:map-marker"} style={{ color: "red" }} />
+             <img src="/assets/pin.png" alt="pin" style={{ width: '20px', height: '20' }} />
           </Marker>
         )}
       </Map>

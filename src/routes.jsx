@@ -18,6 +18,8 @@ import BarangayInfoPage from './pages/BarangayInfoPage';
 import ViewModal from './components/modal/ViewModal';
 import RecordViewPage from './pages/RecordViewPage';
 import Loader from './components/loader/Loader';
+import Demographic from './pages/Demographic';
+import BarangayLocationPage from './pages/BarangayLocationPage';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -81,6 +83,8 @@ export default function Router() {
         { path: 'record', element: <ProtectedRoute><ResidenceRecordPage /></ProtectedRoute> },
         { path: 'record/view/:id', element: <ProtectedRoute><RecordViewPage /></ProtectedRoute> },
         { path: 'brgyinfo', element: <ProtectedRoute><BarangayInfoPage /></ProtectedRoute> },
+        { path: 'brgyinfo/demographic', element: <ProtectedRoute><Demographic /></ProtectedRoute> },
+        { path: 'brgyinfo/location', element: <ProtectedRoute><BarangayLocationPage /></ProtectedRoute> },
       ],
     },
 

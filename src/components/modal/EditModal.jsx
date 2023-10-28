@@ -172,11 +172,13 @@ const AddModal = ({ open, onClose, id, data }) => {
   // Define the handleInputChange function to update formData
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const newValue = name === 'age' ? parseInt(value, 10) : value;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: newValue,
     }));
   };
+  
   const handleEduInputChange = (e, level, field) => {
     const { value } = e.target;
     setEduAttainment((prevEduAttainment) => ({

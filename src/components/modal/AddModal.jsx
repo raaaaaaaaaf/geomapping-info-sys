@@ -80,7 +80,7 @@ const AddModal = ({ open, onClose }) => {
       {
         name: "",
         position: "",
-        age: "",
+        age: 0,
         dob: "",
         cstatus: "",
         occupation: "",
@@ -108,11 +108,13 @@ const AddModal = ({ open, onClose }) => {
   // Define the handleInputChange function to update formData
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const newValue = name === 'age' ? parseInt(value, 10) : value;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: newValue,
     }));
   };
+  
   const handleEduInputChange = (e, level, field) => {
     const { value } = e.target;
     setEduAttainment((prevEduAttainment) => ({
@@ -467,6 +469,7 @@ const AddModal = ({ open, onClose }) => {
                   label="Age"
                   variant="outlined"
                   fullWidth
+                  type="number"
                   value={record.age}
                   onChange={(e) => handleOccupantsInputChange(e, index, "age")}
                 />

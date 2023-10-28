@@ -22,8 +22,20 @@ const navConfig = [
     title: 'Barangay Information',
     path: '/dashboard/brgyinfo',
     icon: <Iconify icon={'akar-icons:person'} />,
-    // Use state to manage the anchor element for the dropdown
-
+    subMenu: [
+      {
+        title: '•   Barangay Officials',
+        path: '/dashboard/brgyinfo',
+      },
+      {
+        title: '•  Barangay hall address & contact info/person',
+        path: '/dashboard/brgyinfo/location',
+      },
+      {
+        title: '•  Demographic analysis',
+        path: '/dashboard/brgyinfo/demographic',
+      },
+    ],
   },
   {
     title: 'Residents Record',
