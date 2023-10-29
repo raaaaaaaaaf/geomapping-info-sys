@@ -28,7 +28,7 @@ const navConfig = [
         path: '/dashboard/brgyinfo',
       },
       {
-        title: '•  Barangay hall address & contact info/person',
+        title: '•  Barangay Hall Address & Emergency Hotline',
         path: '/dashboard/brgyinfo/location',
       },
       {

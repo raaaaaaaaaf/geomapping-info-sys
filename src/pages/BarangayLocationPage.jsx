@@ -26,14 +26,53 @@ const BarangayLocationPage = () => {
           meters or 9.8 feet above mean sea level.
         </Typography>
         <Typography variant="h5" sx={{ mb: 1 }}>
-          In case of Emergency Contact this person:
+          In case of Emergency Hotline Numbers:
         </Typography>
-        <Typography >
-          Gaudioso Besario
-        </Typography>
-        <Typography sx={{ mb: 5 }}>
-          09075559399
-        </Typography>
+
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src="/assets/police-hat.png"
+                alt="hat"
+                style={{ width: "20px", height: "20px", marginRight: "10px" }}
+              />
+              <Typography>Police Station:</Typography>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Typography sx={{ mb: 5 }}>09630733611</Typography>
+            </div>
+          </div>
+
+          <div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src="/assets/fire.png"
+                alt="hat"
+                style={{ width: "20px", height: "20px", marginRight: "10px" }}
+              />
+              <Typography>Tubajon Fire Station:</Typography>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Typography sx={{ mb: 5 }}>09385920305</Typography>
+            </div>
+          </div>
+
+          <div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src="/assets/sos.png"
+                alt="hat"
+                style={{ width: "20px", height: "20px", marginRight: "10px" }}
+              />
+              <Typography>Emergency Center:</Typography>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Typography sx={{ mb: 5 }}>09487800498</Typography>
+            </div>
+          </div>
+        </div>
 
         <div
           style={{
