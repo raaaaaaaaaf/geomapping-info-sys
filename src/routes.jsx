@@ -20,19 +20,25 @@ import RecordViewPage from './pages/RecordViewPage';
 import Loader from './components/loader/Loader';
 import Demographic from './pages/Demographic';
 import BarangayLocationPage from './pages/BarangayLocationPage';
+import UserDashboardPage from './pages/UserPage/UserDashboardPage';
+import RequestedClearancePage from './pages/UserPage/RequestedClearancePage.jsx';
+import RequestBrgyClearance from './pages/UserPage/RequestBrgyClearance.jsx';
+import RequestResidency from './pages/UserPage/RequestResidency.jsx';
+import RequestBusiness from './pages/UserPage/RequestBusiness.jsx';
 // ----------------------------------------------------------------------
 
 export default function Router() {
 
-  const ProtectedRoute = ({ children }) => {
+  const ProtectedRoute = ({ children, role }) => {
     const { currentUser, loading, userData } = useContext(AuthContext);
+
     const [timedOut, setTimedOut] = useState(false);
   
     useEffect(() => {
       // Set a timeout to consider the loading taking too long
       const timeoutId = setTimeout(() => {
         setTimedOut(true);
-      }, 2000); // 5 seconds timeout (adjust as needed)
+      }, 4000); // 5 seconds timeout (adjust as needed)
   
       return () => {
         clearTimeout(timeoutId);
@@ -44,14 +50,22 @@ export default function Router() {
         // Redirect to login page if loading takes too long
         return <Navigate to="/login" replace />;
       } else {
-        return <Loader/>
+        return <Loader/>;
       }
     }
   
     if (!currentUser) {
-      return <Navigate to="/login" replace />;
+      // Redirect to the login page if the user is not authenticated
+      return <Navigate to="/login" />;
     }
-  
+    if (role && userData.role !== role) {
+      if (userData.role === "Admin") {
+        return <Navigate to={'/dashboard'}/>
+      } else {
+        return <Navigate to={'/user'}/>
+      }
+    }
+     // Render the children if the user is authenticated
     return children;
   };
 
@@ -74,9 +88,26 @@ export default function Router() {
       path: '/dashboard',
       element: <ProtectedRoute><DashboardLayout /></ProtectedRoute>,
       children: [
-        { element: <ProtectedRoute><Navigate to="/dashboard/app" /></ProtectedRoute>, index: true },
-        { path: 'app', element: <ProtectedRoute><DashboardAppPage /></ProtectedRoute> },
-        { path: 'user', element: <ProtectedRoute><UserPage /></ProtectedRoute> },
+        { element: <ProtectedRoute role={"Admin"}><Navigate to="/dashboard/app" /></ProtectedRoute>, index: true },
+        { path: 'app', element: <ProtectedRoute role={"Admin"}><DashboardAppPage /></ProtectedRoute> },
+        { path: 'user', element: <ProtectedRoute role={"Admin"}><UserPage /></ProtectedRoute> },
+        { path: 'products', element: <ProtectedRoute role={"Admin"}><ProductsPage /></ProtectedRoute> },
+        { path: 'blog', element: <ProtectedRoute role={"Admin"}><BlogPage /></ProtectedRoute> },
+        { path: 'map', element: <ProtectedRoute role={"Admin"}><MapPage /></ProtectedRoute> },
+        { path: 'record', element: <ProtectedRoute role={"Admin"}><ResidenceRecordPage /></ProtectedRoute> },
+        { path: 'record/view/:id', element: <ProtectedRoute role={"Admin"}><RecordViewPage /></ProtectedRoute> },
+        { path: 'brgyinfo', element: <ProtectedRoute role={"Admin"}><BarangayInfoPage /></ProtectedRoute> },
+        { path: 'brgyinfo/demographic', element: <ProtectedRoute role={"Admin"}><Demographic /></ProtectedRoute> },
+        { path: 'brgyinfo/location', element: <ProtectedRoute role={"Admin"}><BarangayLocationPage /></ProtectedRoute> },
+      ],
+    },
+    {
+      path: '/user',
+      element: <ProtectedRoute><DashboardLayout /></ProtectedRoute>,
+      children: [
+        { element: <ProtectedRoute><Navigate to="/user/app" /></ProtectedRoute>, index: true },
+        { path: 'app', element: <ProtectedRoute><UserDashboardPage /></ProtectedRoute> },
+        
         { path: 'products', element: <ProtectedRoute><ProductsPage /></ProtectedRoute> },
         { path: 'blog', element: <ProtectedRoute><BlogPage /></ProtectedRoute> },
         { path: 'map', element: <ProtectedRoute><MapPage /></ProtectedRoute> },
@@ -85,6 +116,11 @@ export default function Router() {
         { path: 'brgyinfo', element: <ProtectedRoute><BarangayInfoPage /></ProtectedRoute> },
         { path: 'brgyinfo/demographic', element: <ProtectedRoute><Demographic /></ProtectedRoute> },
         { path: 'brgyinfo/location', element: <ProtectedRoute><BarangayLocationPage /></ProtectedRoute> },
+
+        { path: 'view', element: <ProtectedRoute><RequestedClearancePage /></ProtectedRoute> },
+        { path: 'reqbrgyclearance', element: <ProtectedRoute><RequestBrgyClearance /></ProtectedRoute> },
+        { path: 'reqresidency', element: <ProtectedRoute><RequestResidency /></ProtectedRoute> },
+        { path: 'reqbusiness', element: <ProtectedRoute><RequestBusiness /></ProtectedRoute> },
       ],
     },
 

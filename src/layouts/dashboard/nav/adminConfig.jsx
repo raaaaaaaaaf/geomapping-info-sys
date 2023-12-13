@@ -7,7 +7,7 @@ import SvgColor from '../../../components/svg-color';
 
 
 
-const navConfig = [
+const adminConfig = [
   {
     title: 'dashboard',
     path: '/dashboard/app',
@@ -44,4 +44,4 @@ const navConfig = [
   },
 ];
 
-export default navConfig;
+export default adminConfig;

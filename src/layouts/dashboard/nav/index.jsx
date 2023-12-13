@@ -21,9 +21,11 @@ import Logo from "../../../components/logo";
 import Scrollbar from "../../../components/scrollbar";
 import NavSection from "../../../components/nav-section";
 //
-import navConfig from "./config";
+import navConfig from "./adminConfig";
 import { AuthContext } from "../../../context/AuthContext";
-import avtPhoto from '/assets/images/avatars/avatar_default.jpg'
+import avtPhoto from "/assets/images/avatars/avatar_default.jpg";
+import adminConfig from "./adminConfig";
+import userConfig from "./userConfig";
 // ----------------------------------------------------------------------
 
 const NAV_WIDTH = 280;
@@ -57,48 +59,53 @@ export default function Nav({ openNav, onCloseNav }) {
 
   const renderContent = (
     <>
-    {loading ? (
-      <div>...</div>
-    ) : (
-      <Scrollbar
-        sx={{
-          height: 1,
-          "& .simplebar-content": {
+      {loading ? (
+        <div>...</div>
+      ) : (
+        <Scrollbar
+          sx={{
             height: 1,
-            display: "flex",
-            flexDirection: "column",
-          },
-        }}
-      >
-        <Box sx={{ px: 2.5, py: 3, display: "inline-flex" }}>
-          <Logo />
-        </Box>
+            "& .simplebar-content": {
+              height: 1,
+              display: "flex",
+              flexDirection: "column",
+            },
+          }}
+        >
+          <Box sx={{ px: 2.5, py: 3, display: "inline-flex" }}>
+            <Logo />
+          </Box>
 
-        <Box sx={{ mb: 5, mx: 2.5 }}>
-          <Link underline="none">
-            <StyledAccount>
-            <Avatar src={currentUser.photoURL ?? avtPhoto} alt="photoURL" />
+          <Box sx={{ mb: 5, mx: 2.5 }}>
+            <Link underline="none">
+              <StyledAccount>
+                <Avatar src={currentUser.photoURL ?? avtPhoto} alt="photoURL" />
 
-              <Box sx={{ ml: 2 }}>
-                <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
-                  {userData.displayName}
-                </Typography>
+                <Box sx={{ ml: 2 }}>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ color: "text.primary" }}
+                  >
+                    {userData.displayName}
+                  </Typography>
 
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  Admin
-                </Typography>
-              </Box>
-            </StyledAccount>
-          </Link>
-        </Box>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    {userData.role}
+                  </Typography>
+                </Box>
+              </StyledAccount>
+            </Link>
+          </Box>
 
-        <NavSection data={navConfig} />
+          {userData.role === "Admin" ? (
+            <NavSection data={adminConfig} />
+          ) : (
+            <NavSection data={userConfig} />
+          )}
 
-        <Box sx={{ flexGrow: 1 }} />
-
-      </Scrollbar>
-    )}
-
+          <Box sx={{ flexGrow: 1 }} />
+        </Scrollbar>
+      )}
     </>
   );
 
