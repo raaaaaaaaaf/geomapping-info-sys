@@ -22,6 +22,7 @@ import { collection, doc, getDocs, query } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import _ from "lodash";
 import { Link } from "react-router-dom";
+import Loader from "../components/loader/Loader";
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
@@ -32,6 +33,8 @@ export default function DashboardAppPage() {
   const [residence, setResidence] = useState(0);
 
   const [resData, setResData] = useState({});
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,14 +56,13 @@ export default function DashboardAppPage() {
         setResData(data);
         setBrgyOfficial(brgySnap.docs.length);
         setResidence(resSnap.docs.length);
+        setLoading(false);
       } catch (err) {
         console.error(err);
       }
     };
     fetchData();
   }, []);
-
-
 
   const sortedDocData = _.sortBy(
     resData,
@@ -73,51 +75,56 @@ export default function DashboardAppPage() {
         <title> Dashboard | Geomapping and Information System </title>
       </Helmet>
 
-      <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          BRGY SAN ROQUE GEOMAPPING AND INFORMATION SYSTEM
-        </Typography>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Container maxWidth="xl">
+          <Typography variant="h4" sx={{ mb: 5 }}>
+            BRGY SAN ROQUE GEOMAPPING AND INFORMATION SYSTEM
+          </Typography>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={6}>
-            <Link to={'/dashboard/brgyinfo'} style={{ textDecoration: 'none' }}>
-              <AppWidgetSummary
-                title="Barangay Official's"
-                total={brgyOfficial}
-                color="info"
-                icon={"akar-icons:person"}
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6} md={6}>
+              <Link
+                to={"/dashboard/brgyinfo"}
+                style={{ textDecoration: "none" }}
+              >
+                <AppWidgetSummary
+                  title="Barangay Official's"
+                  total={brgyOfficial}
+                  color="info"
+                  icon={"akar-icons:person"}
+                />
+              </Link>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={6}>
+              <Link to={"/dashboard/record"} style={{ textDecoration: "none" }}>
+                <AppWidgetSummary
+                  title="Residence Record's"
+                  total={residence}
+                  color="info"
+                  icon={"tabler:file-type-doc"}
+                />
+              </Link>
+            </Grid>
+
+            <Grid item xs={12} md={6} lg={12}>
+              <AppOrderTimeline
+                title="Record Timeline"
+                list={sortedDocData.slice(0, 5).map((data, index) => ({
+                  id: `${data.id}`,
+                  title: `${data.fname} - (${data.gender})`,
+                  type: `order${index + 1}`,
+                  time: `${new Date(
+                    data.timeStamp.seconds * 1000
+                  ).toLocaleString("en-US")}`,
+                }))}
               />
-            </Link>
-
+            </Grid>
           </Grid>
-
-          <Grid item xs={12} sm={6} md={6}>
-            <Link to={'/dashboard/record'} style={{ textDecoration: 'none' }}>
-              <AppWidgetSummary
-                title="Residence Record's"
-                total={residence}
-                color="info"
-                icon={"tabler:file-type-doc"}
-              />
-            </Link>
-
-          </Grid> 
-
-          <Grid item xs={12} md={6} lg={12}>
-            <AppOrderTimeline
-              title="Record Timeline"
-              list={sortedDocData.slice(0, 5).map((data, index) => ({
-                id: `${data.id}`,
-                title: `${data.fname} - (${data.gender})`,
-                type: `order${index + 1}`,
-                time: `${new Date(data.timeStamp.seconds * 1000).toLocaleString(
-                  "en-US"
-                )}`,
-              }))}
-            />
-          </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      )}
     </>
   );
 }

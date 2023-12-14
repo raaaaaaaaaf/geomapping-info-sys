@@ -45,7 +45,7 @@ const userConfig = [
   {
     title: 'Blotter Record',
     path: '/user/blotter',
-    icon: <Iconify icon={'carbon:map'} />,
+    icon: <Iconify icon={'guidance:police'} />,
   },
 ];
 

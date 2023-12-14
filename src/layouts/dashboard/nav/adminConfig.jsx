@@ -40,17 +40,17 @@ const adminConfig = [
   {
     title: 'Residents Record',
     path: '/dashboard/record',
-    icon: <Iconify icon={'tabler:file-type-doc'} />,
+    icon: <Iconify icon={'pepicons-pencil:people'} />,
   },
   {
     title: 'Barangay Issurance',
     path: '/dashboard/clearance',
-    icon: <Iconify icon={'tabler:file-type-doc'} />,
+    icon: <Iconify icon={'octicon:issue-closed-24'} />,
   },
   {
     title: 'Blotter Record',
     path: '/dashboard/blotter',
-    icon: <Iconify icon={'tabler:file-type-doc'} />,
+    icon: <Iconify icon={'guidance:police'} />,
   },
 ];
 

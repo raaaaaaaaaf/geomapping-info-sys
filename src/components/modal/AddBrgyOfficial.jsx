@@ -7,7 +7,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
 } from "@mui/material";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
@@ -15,10 +19,11 @@ import { db } from "../../firebase/firebaseConfig";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const AddBrgyOfficial = ({ open, onClose }) => {
-
-  const nav = useNavigate() 
+  const nav = useNavigate();
 
   const [formData, setFormData] = useState({
     fname: "",
@@ -28,6 +33,24 @@ const AddBrgyOfficial = ({ open, onClose }) => {
     bod: "",
     cstatus: "",
   });
+
+  const [dob, setDob] = useState(null);
+
+  const [position, setPosition] = useState(null)
+
+  const [cstatus, setCstatus] = useState(null)
+
+  const handlePosChange = (event) => {
+    setPosition(event.target.value);
+  };
+
+  const handleCstatusChange = (event) => {
+    setCstatus(event.target.value);
+  };
+
+  const handleDobChange = (date) => {
+    setDob(date);
+  };
   // Define the handleInputChange function to update formData
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,11 +64,11 @@ const AddBrgyOfficial = ({ open, onClose }) => {
     try {
       if (
         !formData.fname ||
-        !formData.position ||
         !formData.contact ||
         !formData.email ||
-        !formData.bod ||
-        !formData.cstatus
+        !dob ||
+        !position ||
+        !cstatus
       ) {
         toast.error("Please fill out all fields.", {
           position: "top-right",
@@ -57,11 +80,11 @@ const AddBrgyOfficial = ({ open, onClose }) => {
       const dataRef = collection(db, "data_brgyofficials");
       const data = {
         fname: formData.fname,
-        position: formData.position,
+        position: position,
         contact: formData.contact,
         email: formData.email,
-        bod: formData.bod,
-        cstatus: formData.cstatus,
+        bod: dob.toDate(),
+        cstatus: cstatus,
         timeStamp: serverTimestamp(),
       };
       await addDoc(dataRef, data);
@@ -71,7 +94,7 @@ const AddBrgyOfficial = ({ open, onClose }) => {
         hideProgressBar: false,
       });
       onClose();
-      nav('/dashboard/brgyinfo')
+      nav("/dashboard/brgyinfo");
     } catch (err) {
       toast.error(err.message, {
         position: "top-right",
@@ -105,37 +128,40 @@ const AddBrgyOfficial = ({ open, onClose }) => {
               required
               id="contact"
               name="contact"
+              type="number"
               value={formData.contact}
               onChange={handleInputChange}
               label="Contact:"
               variant="outlined"
               fullWidth
             />
-            <TextField
-              margin="dense"
-              required
-              id="bod"
-              name="bod"
-              value={formData.bod}
-              onChange={handleInputChange}
-              label="Birth Date:"
-              variant="outlined"
-              fullWidth
-            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Date of Birth"
+                value={dob}
+                onChange={handleDobChange}
+                sx={{ mt: 1, mb: 0.5, width: "100%" }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
           </Grid>
           {/* Right Column */}
           <Grid item xs={6}>
-            <TextField
-              margin="dense"
-              required
-              id="position"
-              name="position"
-              value={formData.position}
-              onChange={handleInputChange}
-              label="Position:"
-              variant="outlined"
-              fullWidth
-            />
+            <FormControl sx={{ mt: 1, mb: 0.5, width: "100%" }}>
+              <InputLabel id="demo-simple-select-label">Position</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={position}
+                label="Position"
+                onChange={handlePosChange}
+              >
+                <MenuItem value={"Kagawad"}>Kagawad</MenuItem>
+                <MenuItem value={"Chairmain"}>Chairman</MenuItem>
+                <MenuItem value={"SK Kagawad"}>SK Kagawad</MenuItem>
+                <MenuItem value={"SK Chairmain"}>SK Chairman</MenuItem>
+              </Select>
+            </FormControl>
             <TextField
               margin="dense"
               required
@@ -147,17 +173,21 @@ const AddBrgyOfficial = ({ open, onClose }) => {
               variant="outlined"
               fullWidth
             />
-            <TextField
-              margin="dense"
-              required
-              id="cstatus"
-              name="cstatus"
-              value={formData.cstatus}
-              onChange={handleInputChange}
-              label="Civil Status:"
-              variant="outlined"
-              fullWidth
-            />
+           <FormControl sx={{ mt: 1, mb: 0.5, width: "100%" }}>
+              <InputLabel id="demo-simple-select-label">Civil Status</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={cstatus}
+                label="Gender"
+                onChange={handleCstatusChange}
+              >
+                <MenuItem value={"Male"}>Single</MenuItem>
+                <MenuItem value={"Female"}>Married</MenuItem>
+                <MenuItem value={"Male"}>Widowed</MenuItem>
+
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
       </DialogContent>

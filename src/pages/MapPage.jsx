@@ -116,7 +116,6 @@ export default function MapPage() {
     };
     fetchData();
   }, []);
-  
 
   return (
     <div style={{ width: "100%", height: "100vh" }}>
@@ -164,10 +163,7 @@ export default function MapPage() {
               }}
             >
               {MarkerList[activeMarker].content.map((text, index) => (
-                <Typography
-                  key={index}
-                  sx={{ p: 1, textAlign: "center"}}
-                >
+                <Typography key={index} sx={{ p: 1, textAlign: "center" }}>
                   {text}
                 </Typography>
               ))}
@@ -201,21 +197,14 @@ export default function MapPage() {
                 >
                   {" "}
                   <Typography sx={{ p: 1 }}>
-                    {marker.latitude}, {marker.longitude}
+                    Household Head: {marker.fname}
                   </Typography>
-                  <Typography sx={{ p: 1 }}>Name: {marker.fname}</Typography>
-                  <Typography sx={{ p: 1 }}>
-                    Birth Date: {marker.dob}
-                  </Typography>
-                  <Typography sx={{ p: 1 }}>
-                    Place of Birth: {marker.pob}
-                  </Typography>
-                  <Typography sx={{ p: 1 }}>
-                    Civil Status: {marker.cstatus}
-                  </Typography>
-                  <Typography sx={{ p: 1 }}>
-                    Religion: {marker.religion}
-                  </Typography>
+                  <Typography sx={{ p: 1 }}>Members: </Typography>
+                  {marker.homeOccupants.map((member) => {
+                    <Typography sx={{ p: 1 }}>
+                      Birth Date: {member.name}
+                    </Typography>;
+                  })}
                 </Popover>
               </Marker>
             </div>

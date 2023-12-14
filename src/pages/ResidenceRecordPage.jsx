@@ -336,7 +336,7 @@ export default function ResidenceRecordPage() {
 
                             <TableCell align="left">{gender}</TableCell>
 
-                            <TableCell align="left">{dob}</TableCell>
+                            <TableCell align="left">{new Date(dob.seconds * 1000).toLocaleDateString("en-US")}</TableCell>
 
                             <TableCell align="left">{cstatus}</TableCell>
 

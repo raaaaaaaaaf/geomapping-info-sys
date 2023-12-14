@@ -9,6 +9,10 @@ import {
   TextField,
   DialogActions,
   Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import Popup from "../maps/MapPopup";
 import MapPopup from "../maps/MapPopup";
@@ -17,19 +21,34 @@ import { db } from "../../firebase/firebaseConfig";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 const AddModal = ({ open, onClose }) => {
-
   const nav = useNavigate();
 
+  const [gender, setGender] = useState("")
+
+  const [cstatus, setCstatus] = useState("")
+
+  const [dob, setDob] = useState(null)
+
+  const handleDobChange = (date) => {
+    setDob(date);
+  };
+
+  const handleGenderChange = (event) => {
+    setGender(event.target.value);
+  };
+
+  const handleCstatusChange = (event) => {
+    setCstatus(event.target.value);
+  };
 
   const [formData, setFormData] = useState({
     fname: "",
     age: "",
-    gender: "",
-    dob: "",
     pob: "",
     contact: "",
-    cstatus: "",
     religion: "",
   });
   const [eduAttainment, setEduAttainment] = useState({
@@ -108,13 +127,13 @@ const AddModal = ({ open, onClose }) => {
   // Define the handleInputChange function to update formData
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    const newValue = name === 'age' ? parseInt(value, 10) : value;
+    const newValue = name === "age" ? parseInt(value, 10) : value;
     setFormData((prevData) => ({
       ...prevData,
       [name]: newValue,
     }));
   };
-  
+
   const handleEduInputChange = (e, level, field) => {
     const { value } = e.target;
     setEduAttainment((prevEduAttainment) => ({
@@ -131,17 +150,17 @@ const AddModal = ({ open, onClose }) => {
       if (
         !formData.fname ||
         !formData.age ||
-        !formData.gender ||
-        !formData.dob ||
         !formData.pob ||
         !formData.contact ||
-        !formData.cstatus ||
         !formData.religion ||
         !eduAttainment ||
         !employmentRecords ||
         !homeOccupants ||
         !coords.longitude ||
-        !coords.latitude
+        !coords.latitude ||
+        !cstatus ||
+        !dob ||
+        !gender
       ) {
         toast.error("Please fill out all fields.", {
           position: "top-right",
@@ -154,11 +173,11 @@ const AddModal = ({ open, onClose }) => {
       const data = {
         fname: formData.fname,
         age: formData.age,
-        gender: formData.gender,
-        dob: formData.dob,
+        gender: gender,
+        dob: dob.toDate(),
         pob: formData.pob,
         contact: formData.contact,
-        cstatus: formData.cstatus,
+        cstatus: cstatus,
         religion: formData.religion,
         edu_atainment: eduAttainment,
         employment_record: employmentRecords,
@@ -174,7 +193,7 @@ const AddModal = ({ open, onClose }) => {
         hideProgressBar: false,
       });
       onClose();
-      nav('/dashboard/record')
+      nav("/dashboard/record");
     } catch (err) {
       toast.error(err.message, {
         position: "top-right",
@@ -218,17 +237,15 @@ const AddModal = ({ open, onClose }) => {
                 variant="outlined"
                 fullWidth
               />
-              <TextField
-                margin="dense"
-                required
-                id="dob"
-                name="dob"
-                value={formData.dob}
-                onChange={handleInputChange}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
                 label="Date of Birth"
-                variant="outlined"
-                fullWidth
+                value={dob}
+                onChange={handleDobChange}
+                sx={{ mt: 1, mb: 0.5,width: "100%" }}
+                renderInput={(params) => <TextField {...params} />}
               />
+            </LocalizationProvider>
               <TextField
                 margin="dense"
                 required
@@ -244,25 +261,28 @@ const AddModal = ({ open, onClose }) => {
 
             {/* Right Column */}
             <Grid item xs={6}>
-              <TextField
-                margin="dense"
-                required
-                id="gender"
-                name="gender"
-                value={formData.gender}
-                onChange={handleInputChange}
-                label="Gender"
-                variant="outlined"
-                fullWidth
-              />
+              <FormControl sx={{ mt: 1, mb: 0.5, width: "100%" }}>
+                <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={gender}
+                  label="Gender"
+                  onChange={handleGenderChange}
+                >
+                  <MenuItem value={"Male"}>Male</MenuItem>
+                  <MenuItem value={"Female"}>Female</MenuItem>
+                </Select>
+              </FormControl>
               <TextField
                 margin="dense"
                 required
                 id="contact"
                 name="contact"
+                type="number"
                 value={formData.contact}
                 onChange={handleInputChange}
-                label="Contact NO."
+                label="Contact No."
                 variant="outlined"
                 fullWidth
               />
@@ -277,17 +297,20 @@ const AddModal = ({ open, onClose }) => {
                 variant="outlined"
                 fullWidth
               />
-              <TextField
-                margin="dense"
-                required
-                id="cstatus"
-                name="cstatus"
-                value={formData.cstatus}
-                onChange={handleInputChange}
-                label="Civil Status"
-                variant="outlined"
-                fullWidth
-              />
+              <FormControl sx={{ mt: 1, width: "100%" }}>
+                <InputLabel id="demo-simple-select-label">Civil Status</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={cstatus}
+                  label="Civil Status"
+                  onChange={handleCstatusChange}
+                >
+                  <MenuItem value={"Single"}>Single</MenuItem>
+                  <MenuItem value={"Married"}>Married</MenuItem>
+                  <MenuItem value={"Widowed"}>Widowed</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
         </div>
