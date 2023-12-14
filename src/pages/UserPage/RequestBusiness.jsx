@@ -11,13 +11,14 @@ import {
     TextField,
     Typography,
   } from "@mui/material";
-  import React, { useState } from "react";
+  import React, { useContext, useState } from "react";
   import { Helmet } from "react-helmet-async";
   import Iconify from "../../components/iconify";
   import { addDoc, collection, serverTimestamp } from "firebase/firestore";
   import { db } from "../../firebase/firebaseConfig";
   import { toast } from "react-toastify";
   import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
   
   const RequestBusiness = () => {
     const [formData, setFormData] = useState({
@@ -28,6 +29,7 @@ import {
       contact: "",
       email: "",
     });
+    const {currentUser} = useContext(AuthContext)
     const handleInputChange = (e) => {
       const { name, value } = e.target;
       setFormData((prevData) => ({
@@ -63,6 +65,7 @@ import {
           baddress: formData.baddress,
           bname: formData.bname,
           type: "Business Clearance",
+          uid: currentUser.uid,
           timeStamp: serverTimestamp(),
         };
         await addDoc(dataRef, data);

@@ -10,38 +10,15 @@ import SvgColor from '../../../components/svg-color';
 const userConfig = [
   {
     title: 'dashboard',
-    path: '/dashboard/app',
+    path: '/user/app',
     icon: <Iconify icon={'carbon:analytics'} />,
   },
   {
     title: 'Mapping',
-    path: '/dashboard/map',
+    path: '/user/map',
     icon: <Iconify icon={'carbon:map'} />,
   },
-  {
-    title: 'Barangay Information',
-    path: '/dashboard/brgyinfo',
-    icon: <Iconify icon={'akar-icons:person'} />,
-    subMenu: [
-      {
-        title: '•   Barangay Officials',
-        path: '/dashboard/brgyinfo',
-      },
-      {
-        title: '•  Barangay Hall Address & Emergency Hotline',
-        path: '/dashboard/brgyinfo/location',
-      },
-      {
-        title: '•  Demographic analysis',
-        path: '/dashboard/brgyinfo/demographic',
-      },
-    ],
-  },
-  {
-    title: 'Residents Record',
-    path: '/dashboard/record',
-    icon: <Iconify icon={'tabler:file-type-doc'} />,
-  },
+
   {
     title: 'Barangay Issurance',
     path: '/user/view',
@@ -64,6 +41,11 @@ const userConfig = [
         path: '/user/view',
       },
     ],
+  },
+  {
+    title: 'Blotter Record',
+    path: '/user/blotter',
+    icon: <Iconify icon={'carbon:map'} />,
   },
 ];
 

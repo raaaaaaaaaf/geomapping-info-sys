@@ -11,13 +11,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import Iconify from "../../components/iconify";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 const RequestBrgyClearance = () => {
   const [type, setType] = useState("");
@@ -28,6 +29,8 @@ const RequestBrgyClearance = () => {
     contact: "",
     email: "",
   });
+
+  const {currentUser} = useContext(AuthContext)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -72,6 +75,7 @@ const RequestBrgyClearance = () => {
         reason: type,
         type: "Barangay Clearance",
         cstatus: cstatus,
+        uid: currentUser.uid,
         timeStamp: serverTimestamp(),
       };
       await addDoc(dataRef, data);

@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 // @mui
 import {
   Card,
@@ -23,22 +23,20 @@ import {
   TablePagination,
 } from "@mui/material";
 // components
-import Label from "../../components/label";
-import Iconify from "../../components/iconify";
-import Scrollbar from "../../components/scrollbar";
+
+import Iconify from "../components/iconify";
+import Scrollbar from "../components/scrollbar";
 // sections
-import { UserListHead, UserListToolbar } from "../../sections/@dashboard/user";
+import { UserListHead, UserListToolbar } from "../sections/@dashboard/user";
 // mock
-import USERLIST from "../../_mock/user";
-import AddModal from "../../components/modal/AddModal";
-import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
-import { db } from "../../firebase/firebaseConfig";
-import EditBrgyClearance from "../../components/modal/BrgyIssurance/EditBrgyClerance";
-import EditResidency from "../../components/modal/BrgyIssurance/EditResidency";
-import EditBusiness from "../../components/modal/BrgyIssurance/EditBusiness";
+
+import { collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
+import { db } from "../firebase/firebaseConfig";
+import EditBrgyClearance from "../components/modal/BrgyIssurance/EditBrgyClerance";
+import EditResidency from "../components/modal/BrgyIssurance/EditResidency";
+import EditBusiness from "../components/modal/BrgyIssurance/EditBusiness";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
 
 // ----------------------------------------------------------------------
 
@@ -84,7 +82,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function RequestedClearancePage() {
+export default function ViewAllRequested() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -113,15 +111,13 @@ export default function RequestedClearancePage() {
 
   const [modalResidency, setModalResidency] = useState(false);
 
-  const {currentUser} = useContext(AuthContext)
-
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = [];
-        const dataRef = query(collection(db, "data_issurance"), where("uid", "==", currentUser.uid));
+        const dataRef = query(collection(db, "data_issurance"));
         const dataSnap = await getDocs(dataRef);
         dataSnap.forEach((doc) => {
           data.push({

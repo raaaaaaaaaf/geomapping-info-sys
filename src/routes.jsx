@@ -28,6 +28,9 @@ import RequestBusiness from './pages/UserPage/RequestBusiness.jsx';
 import ViewBrgyClearance from './pages/UserPage/ViewBrgyClearance.jsx';
 import ViewResidency from './pages/UserPage/ViewResidency.jsx';
 import ViewBusiness from './pages/UserPage/ViewBusiness.jsx';
+import ViewAllRequested from './pages/ViewAllRequested.jsx';
+import BlotterPage from './pages/BlotterPage.jsx';
+import UserBlotterPage from './pages/UserPage/UserBlotterPage.jsx';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -97,6 +100,11 @@ export default function Router() {
         { path: 'products', element: <ProtectedRoute role={"Admin"}><ProductsPage /></ProtectedRoute> },
         { path: 'blog', element: <ProtectedRoute role={"Admin"}><BlogPage /></ProtectedRoute> },
         { path: 'map', element: <ProtectedRoute role={"Admin"}><MapPage /></ProtectedRoute> },
+        { path: 'blotter', element: <ProtectedRoute role={"Admin"}><BlotterPage /></ProtectedRoute> },
+        { path: 'clearance', element: <ProtectedRoute role={"Admin"}><ViewAllRequested /></ProtectedRoute> },
+        { path: 'clearance/brgyclearance/:id', element: <ProtectedRoute><ViewBrgyClearance /></ProtectedRoute> },
+        { path: 'clearance/residency/:id', element: <ProtectedRoute><ViewResidency /></ProtectedRoute> },
+        { path: 'clearance/business/:id', element: <ProtectedRoute><ViewBusiness /></ProtectedRoute> },
         { path: 'record', element: <ProtectedRoute role={"Admin"}><ResidenceRecordPage /></ProtectedRoute> },
         { path: 'record/view/:id', element: <ProtectedRoute role={"Admin"}><RecordViewPage /></ProtectedRoute> },
         { path: 'brgyinfo', element: <ProtectedRoute role={"Admin"}><BarangayInfoPage /></ProtectedRoute> },
@@ -119,6 +127,8 @@ export default function Router() {
         { path: 'brgyinfo', element: <ProtectedRoute><BarangayInfoPage /></ProtectedRoute> },
         { path: 'brgyinfo/demographic', element: <ProtectedRoute><Demographic /></ProtectedRoute> },
         { path: 'brgyinfo/location', element: <ProtectedRoute><BarangayLocationPage /></ProtectedRoute> },
+
+        { path: 'blotter', element: <ProtectedRoute><UserBlotterPage /></ProtectedRoute> },
 
         { path: 'view', element: <ProtectedRoute><RequestedClearancePage /></ProtectedRoute> },
         { path: 'view/brgyclearance/:id', element: <ProtectedRoute><ViewBrgyClearance /></ProtectedRoute> },

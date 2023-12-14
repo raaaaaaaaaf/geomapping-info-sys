@@ -42,6 +42,16 @@ const adminConfig = [
     path: '/dashboard/record',
     icon: <Iconify icon={'tabler:file-type-doc'} />,
   },
+  {
+    title: 'Barangay Issurance',
+    path: '/dashboard/clearance',
+    icon: <Iconify icon={'tabler:file-type-doc'} />,
+  },
+  {
+    title: 'Blotter Record',
+    path: '/dashboard/blotter',
+    icon: <Iconify icon={'tabler:file-type-doc'} />,
+  },
 ];
 
 export default adminConfig;
