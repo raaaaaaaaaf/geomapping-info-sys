@@ -18,7 +18,7 @@ import ReactToPrint from "react-to-print";
 import Iconify from "../../components/iconify";
 import "../../assets/print.css";
 
-const ViewBrgyClearance = () => {
+const ViewResidency = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
@@ -115,27 +115,24 @@ const ViewBrgyClearance = () => {
             alignItems="center"
             justifyContent="center"
           >
-            <Typography variant="h3" style={{ marginTop: "40px" }}>
-              C E R T I F I C A T I O N
+            <Typography variant="h2" style={{ marginTop: "40px" }}>
+              CERTIFICATE OF RESIDENCY
             </Typography>
             <Typography variant="h5" style={{ margin: "40px" }}>
               TO WHOM IT MAY CONCERN:{" "}
             </Typography>
             <Typography variant="body1" gutterBottom style={{ margin: "10px" }}>
-              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;This is to certify that{" "}
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;THIS IS TO CERTIFY that
+              as per records available in this office, Mr/Ms.{" "}
               <span style={{ textDecoration: "underline" }}>
-                __________{data.fname}__________
+                ___{data.fname}___{data.sex}
               </span>
-              of legal age,
+              ,{" "}
               <span style={{ textDecoration: "underline" }}>
                 __________{data.cstatus}__________
               </span>
-              , Filipino, is a bonafide resident of
-              <span style={{ textDecoration: "underline" }}>
-                __________{data.address}__________
-              </span>
-              Barangay San Roque, Dinagat Island, and that he/she has no
-              derogatory / criminal records filed in this Barangay.
+              , of legal age, Filipino citizen is a bonafide resident of
+              Barangay San Roque, Dinagat Island
             </Typography>
 
             <Grid>
@@ -144,44 +141,10 @@ const ViewBrgyClearance = () => {
                 gutterBottom
                 style={{ marginTop: "40px" }}
               >
-                This Certification is issued upon his/her request for:
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; CERTIFYING FURTHER,
+                that above-named person, is a person of good moral character and
+                has no derogatory and or criminal records in the barangay.
               </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={data.reason === "Local Employment"}
-                        />
-                      }
-                      label="Local Employment"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={data.reason === "Overseas Employment"}
-                        />
-                      }
-                      label="Overseas Employment"
-                    />
-                  </FormGroup>
-                </Grid>
-                <Grid item xs={6}>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox checked={data.reason === "Loan"} />}
-                      label="Loan"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={data.reason === "Scholarship"} />
-                      }
-                      label="Scholarship"
-                    />
-                  </FormGroup>
-                </Grid>
-              </Grid>
             </Grid>
             <Typography
               variant="subtitle1"
@@ -193,11 +156,13 @@ const ViewBrgyClearance = () => {
                 "en-US",
                 { day: "numeric" }
               )}
-              &nbsp; &nbsp; day of &nbsp; &nbsp;{" "}
+              &nbsp; &nbsp; day&nbsp; &nbsp; of &nbsp; &nbsp;{" "}
               {new Date(data.timeStamp.seconds * 1000).toLocaleDateString(
                 "en-US",
                 { month: "long", year: "numeric" }
-              )} 
+              )}{" "}
+              &nbsp; &nbsp;at&nbsp; &nbsp; Barangay&nbsp; &nbsp; San &nbsp;
+              &nbsp;Roque,&nbsp; &nbsp; Dinagat&nbsp; &nbsp; Island
             </Typography>
             <Typography
               variant="subtitle1"
@@ -216,4 +181,4 @@ const ViewBrgyClearance = () => {
   );
 };
 
-export default ViewBrgyClearance;
+export default ViewResidency;

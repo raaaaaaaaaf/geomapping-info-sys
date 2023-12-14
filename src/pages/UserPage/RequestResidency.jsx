@@ -69,7 +69,7 @@ import {
           address: formData.address,
           contact: formData.contact,
           email: formData.email,
-          reason: type,
+          sex: type,
           type: "Residency Certification",
           cstatus: cstatus,
           timeStamp: serverTimestamp(),
@@ -143,7 +143,7 @@ import {
               />
               <FormControl sx={{ mt: 1, width: "100%" }}>
                 <InputLabel id="demo-simple-select-label">
-                  Reason for requesting
+                  Sex
                 </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -152,12 +152,9 @@ import {
                   label="Age"
                   onChange={handleChange}
                 >
-                  <MenuItem value={"Local Employment"}>Local Employment</MenuItem>
-                  <MenuItem value={"Overseas Employment"}>
-                    Overseas Employment
-                  </MenuItem>
-                  <MenuItem value={"Loan"}>Loan</MenuItem>
-                  <MenuItem value={"Scholarship"}>Scholarship</MenuItem>
+                  <MenuItem value={"Male"}>Male</MenuItem>
+                  <MenuItem value={"Female"}>Female</MenuItem>
+
                 </Select>
               </FormControl>
             </Grid>

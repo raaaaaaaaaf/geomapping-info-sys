@@ -343,7 +343,15 @@ export default function RequestedClearancePage() {
                             </IconButton>
 
                             <Link
-                              to={`brgyclearance/${id}`}
+                              to={
+                                type === "Barangay Clearance"
+                                  ? `brgyclearance/${id}`
+                                  : type === "Residency Certification"
+                                  ? `residency/${id}`
+                                  : type === "Business Clearance"
+                                  ? `residency/${id}`
+                                  : ""
+                              }
                               style={{
                                 textDecoration: "none",
                                 color: "white",
