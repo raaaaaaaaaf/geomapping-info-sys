@@ -56,7 +56,7 @@ const ViewResidency = () => {
   return (
     <>
       <Helmet>
-        <title> Barangay Clearance </title>
+        <title> Residency Certificate </title>
       </Helmet>
 
       <Container maxWidth="xl" className="print-container">

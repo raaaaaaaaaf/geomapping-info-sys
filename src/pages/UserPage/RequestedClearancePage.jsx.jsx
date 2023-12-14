@@ -349,7 +349,7 @@ export default function RequestedClearancePage() {
                                   : type === "Residency Certification"
                                   ? `residency/${id}`
                                   : type === "Business Clearance"
-                                  ? `residency/${id}`
+                                  ? `business/${id}`
                                   : ""
                               }
                               style={{

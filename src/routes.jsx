@@ -27,6 +27,7 @@ import RequestResidency from './pages/UserPage/RequestResidency.jsx';
 import RequestBusiness from './pages/UserPage/RequestBusiness.jsx';
 import ViewBrgyClearance from './pages/UserPage/ViewBrgyClearance.jsx';
 import ViewResidency from './pages/UserPage/ViewResidency.jsx';
+import ViewBusiness from './pages/UserPage/ViewBusiness.jsx';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -122,6 +123,7 @@ export default function Router() {
         { path: 'view', element: <ProtectedRoute><RequestedClearancePage /></ProtectedRoute> },
         { path: 'view/brgyclearance/:id', element: <ProtectedRoute><ViewBrgyClearance /></ProtectedRoute> },
         { path: 'view/residency/:id', element: <ProtectedRoute><ViewResidency /></ProtectedRoute> },
+        { path: 'view/business/:id', element: <ProtectedRoute><ViewBusiness /></ProtectedRoute> },
         { path: 'reqbrgyclearance', element: <ProtectedRoute><RequestBrgyClearance /></ProtectedRoute> },
         { path: 'reqresidency', element: <ProtectedRoute><RequestResidency /></ProtectedRoute> },
         { path: 'reqbusiness', element: <ProtectedRoute><RequestBusiness /></ProtectedRoute> },
