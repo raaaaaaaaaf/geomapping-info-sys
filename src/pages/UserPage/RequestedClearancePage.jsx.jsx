@@ -31,11 +31,13 @@ import { UserListHead, UserListToolbar } from "../../sections/@dashboard/user";
 // mock
 import USERLIST from "../../_mock/user";
 import AddModal from "../../components/modal/AddModal";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import EditBrgyClearance from "../../components/modal/BrgyIssurance/EditBrgyClerance";
 import EditResidency from "../../components/modal/BrgyIssurance/EditResidency";
 import EditBusiness from "../../components/modal/BrgyIssurance/EditBusiness";
+import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -110,6 +112,8 @@ export default function RequestedClearancePage() {
 
   const [modalResidency, setModalResidency] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -157,7 +161,22 @@ export default function RequestedClearancePage() {
         // Set a default case or leave it empty if not needed
         break;
     }
-    console.log(certificateType)
+    console.log(certificateType);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const dataRef = doc(db, "data_issurance", id);
+      await deleteDoc(dataRef);
+      toast.success("Deleted successfully", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+      });
+      navigate("/user/view");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleRequestSort = (event, property) => {
@@ -316,25 +335,24 @@ export default function RequestedClearancePage() {
                             <IconButton
                               size="large"
                               color="inherit"
-                              //   onClick={() => deleteStaff(id)}
+                              onClick={() => handleDelete(id)}
                             >
                               <Iconify
                                 icon={"material-symbols:delete-outline"}
                               />
                             </IconButton>
-                            <IconButton size="large" color="inherit">
-                              <Iconify icon={"teenyicons:pdf-outline"} />
-                            </IconButton>
 
-                            {/* <Link
-                                to={`view/${id}`}
-                                style={{
-                                  textDecoration: "none",
-                                  color: "black",
-                                }}
-                              >
-
-                              </Link> */}
+                            <Link
+                              to={`brgyclearance/${id}`}
+                              style={{
+                                textDecoration: "none",
+                                color: "white",
+                              }}
+                            >
+                              <IconButton size="large" color="inherit">
+                                <Iconify icon={"teenyicons:pdf-outline"} />
+                              </IconButton>
+                            </Link>
                           </TableCell>
                         </TableRow>
                       );
@@ -372,9 +390,24 @@ export default function RequestedClearancePage() {
                 )}
               </Table>
             </TableContainer>
-            <EditBrgyClearance open={modalBrgyClr} onClose={() => setModalBrgyClr(false)} id={formID} data={editData}/>
-            <EditResidency open={modalResidency} onClose={() => setModalResidency(false)} id={formID} data={editData}/>
-            <EditBusiness open={modalBusiness} onClose={() => setModalBusiness(false)} id={formID} data={editData}/>
+            <EditBrgyClearance
+              open={modalBrgyClr}
+              onClose={() => setModalBrgyClr(false)}
+              id={formID}
+              data={editData}
+            />
+            <EditResidency
+              open={modalResidency}
+              onClose={() => setModalResidency(false)}
+              id={formID}
+              data={editData}
+            />
+            <EditBusiness
+              open={modalBusiness}
+              onClose={() => setModalBusiness(false)}
+              id={formID}
+              data={editData}
+            />
           </Scrollbar>
 
           <TablePagination

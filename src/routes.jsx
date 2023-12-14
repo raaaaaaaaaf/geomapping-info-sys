@@ -25,6 +25,7 @@ import RequestedClearancePage from './pages/UserPage/RequestedClearancePage.jsx'
 import RequestBrgyClearance from './pages/UserPage/RequestBrgyClearance.jsx';
 import RequestResidency from './pages/UserPage/RequestResidency.jsx';
 import RequestBusiness from './pages/UserPage/RequestBusiness.jsx';
+import ViewBrgyClearance from './pages/UserPage/ViewBrgyClearance.jsx';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -118,6 +119,7 @@ export default function Router() {
         { path: 'brgyinfo/location', element: <ProtectedRoute><BarangayLocationPage /></ProtectedRoute> },
 
         { path: 'view', element: <ProtectedRoute><RequestedClearancePage /></ProtectedRoute> },
+        { path: 'view/brgyclearance/:id', element: <ProtectedRoute><ViewBrgyClearance /></ProtectedRoute> },
         { path: 'reqbrgyclearance', element: <ProtectedRoute><RequestBrgyClearance /></ProtectedRoute> },
         { path: 'reqresidency', element: <ProtectedRoute><RequestResidency /></ProtectedRoute> },
         { path: 'reqbusiness', element: <ProtectedRoute><RequestBusiness /></ProtectedRoute> },
