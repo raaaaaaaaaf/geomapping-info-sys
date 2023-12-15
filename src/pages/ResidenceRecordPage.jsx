@@ -115,11 +115,7 @@ export default function ResidenceRecordPage() {
 
   const nav = useNavigate();
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }, []);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -134,6 +130,7 @@ export default function ResidenceRecordPage() {
           });
         });
         setResidence(data);
+        setLoading(false)
       } catch (err) {
         console.error(err);
       }

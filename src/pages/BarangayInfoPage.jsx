@@ -119,11 +119,7 @@ export default function BarangayInfoPage() {
 
   const nav = useNavigate();
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-    }, 2000)
-  }, [])
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -138,6 +134,7 @@ export default function BarangayInfoPage() {
           });
         });
         setBrgyOfficials(data);
+        setLoading(false)
       } catch (err) {
         console.error(err);
       }
@@ -166,9 +163,7 @@ export default function BarangayInfoPage() {
   };
 
 
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
-  };
+
 
   const handleCloseMenu = () => {
     setOpen(null);

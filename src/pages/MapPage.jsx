@@ -68,11 +68,7 @@ export default function MapPage() {
     }
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }, []);
+
 
   const [viewPort, setViewPort] = useState({
     initialViewState: {
@@ -110,6 +106,7 @@ export default function MapPage() {
           });
         });
         setMarkers(data);
+        setLoading(false)
       } catch (err) {
         console.error(err);
       }

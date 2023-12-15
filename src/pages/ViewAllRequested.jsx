@@ -37,6 +37,7 @@ import EditResidency from "../components/modal/BrgyIssurance/EditResidency";
 import EditBusiness from "../components/modal/BrgyIssurance/EditBusiness";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
+import Loader from "../components/loader/Loader";
 
 // ----------------------------------------------------------------------
 
@@ -253,180 +254,192 @@ export default function ViewAllRequested() {
             Requested Clearance
           </Typography>
         </Stack>
+        {loading ? (
+          <Loader />
+        ) : (
+          <Card>
+            <UserListToolbar
+              numSelected={selected.length}
+              filterName={filterName}
+              onFilterName={handleFilterByName}
+            />
 
-        <Card>
-          <UserListToolbar
-            numSelected={selected.length}
-            filterName={filterName}
-            onFilterName={handleFilterByName}
-          />
-
-          <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={cert.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
-                <TableBody>
-                  {filteredUsers
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => {
-                      const { id, fname, type, timeStamp, address } = row;
-                      const selectedUser = selected.indexOf(fname) !== -1;
-
-                      return (
-                        <TableRow
-                          hover
-                          key={id}
-                          tabIndex={-1}
-                          role="checkbox"
-                          selected={selectedUser}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={selectedUser}
-                              onChange={(event) => handleClick(event, fname)}
-                            />
-                          </TableCell>
-
-                          <TableCell component="th" scope="row" padding="none">
-                            <Stack
-                              direction="row"
-                              alignItems="center"
-                              spacing={2}
-                            >
-                              <Avatar
-                                alt={fname}
-                                src={`/assets/images/avatars/avatar_${
-                                  index + 1
-                                }.jpg`}
-                              />
-                              <Typography variant="subtitle2" noWrap>
-                                {fname}
-                              </Typography>
-                            </Stack>
-                          </TableCell>
-
-                          <TableCell align="left">{address}</TableCell>
-
-                          <TableCell align="left">{type}</TableCell>
-
-                          <TableCell align="left">
-                            {new Date(
-                              timeStamp.seconds * 1000
-                            ).toLocaleDateString("en-US")}
-                          </TableCell>
-                          <TableCell align="left">
-                            <IconButton
-                              size="large"
-                              color="inherit"
-                              onClick={() => handleEditModal(id, row)}
-                            >
-                              <Iconify icon={"material-symbols:edit-outline"} />
-                            </IconButton>
-
-                            <IconButton
-                              size="large"
-                              color="inherit"
-                              onClick={() => handleDelete(id)}
-                            >
-                              <Iconify
-                                icon={"material-symbols:delete-outline"}
-                              />
-                            </IconButton>
-
-                            <Link
-                              to={
-                                type === "Barangay Clearance"
-                                  ? `brgyclearance/${id}`
-                                  : type === "Residency Certification"
-                                  ? `residency/${id}`
-                                  : type === "Business Clearance"
-                                  ? `business/${id}`
-                                  : ""
-                              }
-                              style={{
-                                textDecoration: "none",
-                                color: "white",
-                              }}
-                            >
-                              <IconButton size="large" color="inherit">
-                                <Iconify icon={"carbon:view"} />
-                              </IconButton>
-                            </Link>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-
-                {isNotFound && (
+            <Scrollbar>
+              <TableContainer sx={{ minWidth: 800 }}>
+                <Table>
+                  <UserListHead
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={cert.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleRequestSort}
+                    onSelectAllClick={handleSelectAllClick}
+                  />
                   <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <Paper
-                          sx={{
-                            textAlign: "center",
-                          }}
-                        >
-                          <Typography variant="h6" paragraph>
-                            Not found
-                          </Typography>
+                    {filteredUsers
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, index) => {
+                        const { id, fname, type, timeStamp, address } = row;
+                        const selectedUser = selected.indexOf(fname) !== -1;
 
-                          <Typography variant="body2">
-                            No results found for &nbsp;
-                            <strong>&quot;{filterName}&quot;</strong>.
-                            <br /> Try checking for typos or using complete
-                            words.
-                          </Typography>
-                        </Paper>
-                      </TableCell>
-                    </TableRow>
+                        return (
+                          <TableRow
+                            hover
+                            key={id}
+                            tabIndex={-1}
+                            role="checkbox"
+                            selected={selectedUser}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={selectedUser}
+                                onChange={(event) => handleClick(event, fname)}
+                              />
+                            </TableCell>
+
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              padding="none"
+                            >
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                spacing={2}
+                              >
+                                <Avatar
+                                  alt={fname}
+                                  src={`/assets/images/avatars/avatar_${
+                                    index + 1
+                                  }.jpg`}
+                                />
+                                <Typography variant="subtitle2" noWrap>
+                                  {fname}
+                                </Typography>
+                              </Stack>
+                            </TableCell>
+
+                            <TableCell align="left">{address}</TableCell>
+
+                            <TableCell align="left">{type}</TableCell>
+
+                            <TableCell align="left">
+                              {new Date(
+                                timeStamp.seconds * 1000
+                              ).toLocaleDateString("en-US")}
+                            </TableCell>
+                            <TableCell align="left">
+                              <IconButton
+                                size="large"
+                                color="inherit"
+                                onClick={() => handleEditModal(id, row)}
+                              >
+                                <Iconify
+                                  icon={"material-symbols:edit-outline"}
+                                />
+                              </IconButton>
+
+                              <IconButton
+                                size="large"
+                                color="inherit"
+                                onClick={() => handleDelete(id)}
+                              >
+                                <Iconify
+                                  icon={"material-symbols:delete-outline"}
+                                />
+                              </IconButton>
+
+                              <Link
+                                to={
+                                  type === "Barangay Clearance"
+                                    ? `brgyclearance/${id}`
+                                    : type === "Residency Certification"
+                                    ? `residency/${id}`
+                                    : type === "Business Clearance"
+                                    ? `business/${id}`
+                                    : ""
+                                }
+                                style={{
+                                  textDecoration: "none",
+                                  color: "white",
+                                }}
+                              >
+                                <IconButton size="large" color="inherit">
+                                  <Iconify icon={"carbon:view"} />
+                                </IconButton>
+                              </Link>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
                   </TableBody>
-                )}
-              </Table>
-            </TableContainer>
-            <EditBrgyClearance
-              open={modalBrgyClr}
-              onClose={() => setModalBrgyClr(false)}
-              id={formID}
-              data={editData}
-            />
-            <EditResidency
-              open={modalResidency}
-              onClose={() => setModalResidency(false)}
-              id={formID}
-              data={editData}
-            />
-            <EditBusiness
-              open={modalBusiness}
-              onClose={() => setModalBusiness(false)}
-              id={formID}
-              data={editData}
-            />
-          </Scrollbar>
 
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={cert.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Card>
+                  {isNotFound && (
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                          <Paper
+                            sx={{
+                              textAlign: "center",
+                            }}
+                          >
+                            <Typography variant="h6" paragraph>
+                              Not found
+                            </Typography>
+
+                            <Typography variant="body2">
+                              No results found for &nbsp;
+                              <strong>&quot;{filterName}&quot;</strong>.
+                              <br /> Try checking for typos or using complete
+                              words.
+                            </Typography>
+                          </Paper>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  )}
+                </Table>
+              </TableContainer>
+              <EditBrgyClearance
+                open={modalBrgyClr}
+                onClose={() => setModalBrgyClr(false)}
+                id={formID}
+                data={editData}
+              />
+              <EditResidency
+                open={modalResidency}
+                onClose={() => setModalResidency(false)}
+                id={formID}
+                data={editData}
+              />
+              <EditBusiness
+                open={modalBusiness}
+                onClose={() => setModalBusiness(false)}
+                id={formID}
+                data={editData}
+              />
+            </Scrollbar>
+
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={cert.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Card>
+        )}
       </Container>
     </>
   );
