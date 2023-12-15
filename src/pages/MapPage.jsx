@@ -195,16 +195,17 @@ export default function MapPage() {
                     horizontal: "left",
                   }}
                 >
-                  {" "}
                   <Typography sx={{ p: 1 }}>
-                    Household Head: {marker.fname}
+                    Household Head: {marker.fname} {marker.age}
                   </Typography>
-                  <Typography sx={{ p: 1 }}>Members: </Typography>
-                  {marker.homeOccupants.map((member) => {
-                    <Typography sx={{ p: 1 }}>
-                      Birth Date: {member.name}
-                    </Typography>;
-                  })}
+                  <Typography sx={{ p: 1, textAlign: "center" }}>
+                    Members
+                  </Typography>
+                  {marker.homeOccupants.map((member, index) => (
+                    <Typography sx={{ p: 1, textAlign: "center" }} key={index}>
+                      {member.name} {member.age}
+                    </Typography>
+                  ))}
                 </Popover>
               </Marker>
             </div>
